@@ -2,8 +2,8 @@ Package: hydroGOF
 Type: Package
 Title: Goodness-of-fit functions for comparison of simulated and
         observed hydrological time series
-Version: 0.2-0
-Date: 2010-10-07
+Version: 0.2-1
+Date: 2010-11-30
 Author: Mauricio Zambrano Bigiarini
 Maintainer: Mauricio Zambrano Bigiarini
         <mauricio.zambrano@ing.unitn.it>
@@ -19,6 +19,6 @@ Depends: R (>= 2.9.0), hydroTSM
 Suggests: zoo
 URL: http://cran.r-project.org/web/packages/hydroGOF/
 LazyLoad: yes
-Packaged: 2010-10-08 13:36:14 UTC; zambrhe
+Packaged: 2010-11-30 16:12:33 UTC; zambrhe
 Repository: CRAN
-Date/Publication: 2010-10-11 06:39:41
+Date/Publication: 2010-11-30 19:45:54

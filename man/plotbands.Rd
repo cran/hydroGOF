@@ -3,10 +3,10 @@
 \alias{plotbands}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Plot a ts with simulated values and two confidence bands 
+Plot a ts with observed values and two confidence bounds 
 }
 \description{
-It plots a ts with simulated values and two confidence bands. Optionally can also add a simulated time series, in order to be compared with 'x'.
+It plots a ts with observed values and two confidence bounds. Optionally can also add a simulated time series, in order to be compared with 'x'.
 }
 \usage{
 plotbands(x, lband, uband, sim, 
@@ -14,10 +14,10 @@ plotbands(x, lband, uband, sim,
           gof.leg= TRUE, gof.digits=2, 
           legend=c("Obs", "Sim", "95PPU"), leg.cex=1,
           bands.col="lightblue", border= NA,
-          tick.tstep= "months", lab.tstep= "years",
+          tick.tstep= "months", lab.tstep= "years", lab.fmt,
           cal.ini=NA, val.ini=NA, 
           main="Confidence Bounds for 'x'", 
-          xlab="Time", ylab="Q, [m3/s]",
+          xlab="Time", ylab="Q, [m3/s]", ylim,
           col=c("black", "blue"), type= c("lines", "lines"),
           cex= c(0.5, 0.5), cex.axis=1.2, cex.lab=1.2,          
           lwd=c(0.6, 1), lty=c(3, 4), pch=c(1,9), ...)
@@ -25,7 +25,7 @@ plotbands(x, lband, uband, sim,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-ts or zoo object with the simulated values.
+ts or zoo object with the observed values.
 }
   \item{lband}{
 ts or zoo object with the values of the lower band.
@@ -34,7 +34,7 @@ ts or zoo object with the values of the lower band.
  ts or zoo object with the values of the upper band.
 }
   \item{sim}{
-OPTIONAL. ts or zoo object with the values of the observed values.
+OPTIONAL. ts or zoo object with the simulated values.
 }
   \item{dates}{
 OPTIONAL. Date, factor, or character object indicating the dates that will be assigned to \code{x}, \code{lband}, \code{uband}, and \code{sim} (when provided). \cr
@@ -42,17 +42,20 @@ If \code{dates} is a factor or character vector, its values are converted to dat
 When \code{x}, \code{lband}, \code{uband}, and \code{sim} are already of zoo class, \bold{the values provided by \code{dates} over-write the original dates of the objects}.
 }
   \item{date.fmt}{
-OPTIONAL. Character indicating the format in which the dates entered are stored in \code{cal.ini} and \code{val.ini}. Default value is \kbd{\%Y-\%m-\%d} \cr
-ONLY required when \code{cal.ini} or \code{val.ini} is provided.
+OPTIONAL. Character indicating the format in which the dates entered are stored in \code{cal.ini} and \code{val.ini}. See \code{format} in \code{\link[base]{as.Date}}.\cr
+Default value is \kbd{\%Y-\%m-\%d} \cr
+ONLY required when \code{cal.ini}, \code{val.ini} or \code{dates} is provided.
 }
   \item{gof.leg}{
-boolean indicating if the p-factor and r-factor have to be computed and plotted as legends on the graph.
+logical indicating if the p-factor and r-factor have to be computed and plotted as legends on the graph.
 }
   \item{gof.digits}{
-OPTIONAL, numeric. Only used when 'leg.gof=TRUE'. Decimal places used for rounding the goodness-of-fit indexes
+OPTIONAL, numeric. Only used when \code{gof.leg=TRUE}. Decimal places used for rounding the goodness-of-fit indexes
 }
   \item{legend}{
-OPTIONAL. character vector of length 3 with the strings that will be used for the legend of the plot. The first element is used for labelling the observed series, the second for labelling the simulated series and the third one for the predictive uncertainty bounds. Default value is \code{c("obs", "sim", "95PPU")}.
+OPTIONAL. logical or character vector of length 3 with the strings that will be used for the legend of the plot. \cr
+-) When \code{legend} is a character vector, the first element is used for labelling the observed series, the second for labelling the simulated series and the third one for the predictive uncertainty bounds. Default value is \code{c("obs", "sim", "95PPU")} \cr
+-) When \code{legend=FALSE}, the legend is not drawn.
 }
   \item{leg.cex}{
 OPTIONAL. numeric. Used for the GoF legend. Character expansion factor *relative* to current 'par("cex")'. Used for text, and provides the default for 'pt.cex' and 'title.cex'. Default value is 1.
@@ -68,6 +71,9 @@ character indicating the time step that have to be used for putting the ticks on
 }
   \item{lab.tstep}{
 character indicating the time step that have to be used for putting the labels on the time axis. Possible values are: \kbd{days}, \kbd{months}, \kbd{years}. 
+}
+  \item{lab.fmt}{
+Character indicating with the format to be used for the label of the axis. See \code{format} in \code{\link[base]{as.Date}}. If not specified, it will try \kbd{"\%Y-\%m-\%d"} when \code{lab.tstep=="days"}, \kbd{"\%b"} when \code{lab.tstep=="month"}, and \kbd{"\%Y"} when \code{lab.tstep=="year"}. 
 }
  \item{cal.ini}{
 OPTIONAL. Character with the date in which the calibration period started. \cr
@@ -85,6 +91,9 @@ a title for the x axis: see 'title'
 }
   \item{ylab}{
 a title for the y axis: see 'title'
+}
+  \item{ylim}{
+the y limits of the plot. See \code{\link[graphics]{plot.default}}.
 }
   \item{col}{
 colors to be used for plotting the \code{x} and \code{sim} ts.

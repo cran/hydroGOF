@@ -18,12 +18,12 @@ Quantitative statistics included are: Mean Error (\bold{me}), Mean Absolute Erro
 \tabular{ll}{
 Package: \tab hydroGOF\cr
 Type: \tab Package\cr
-Version: \tab 0.2-0\cr
-Date: \tab 2010-10-07\cr
+Version: \tab 0.2-1\cr
+Date: \tab 2010-11-30\cr
 License: \tab GPL >= 2\cr
 LazyLoad: \tab yes\cr
-Packaged: \tab Thu Oct  7 18:01:17 CEST 2010; MZB \cr
-Built: \tab R version 2.11.1 (2010-05-31); i486-pc-linux-gnu \cr
+Packaged: \tab Tue Nov 30 16:50:32 CET 2010; MZB \cr
+BuiltUnder: \tab R version 2.12.0 (2010-10-15); i486-pc-linux-gnu \cr
 }
 %%~~ An overview of how to use the package, including the most important functions ~~
 }

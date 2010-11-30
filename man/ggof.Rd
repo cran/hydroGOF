@@ -14,7 +14,7 @@ ggof(sim, obs, na.rm = TRUE, dates, date.fmt = "\%Y-\%m-\%d",
      pt.style = "ts", ftype = "o",  FUN, 
      gof.leg = TRUE,  digits=2, 
      legend=c("Sim", "Obs"), leg.cex=1,
-     tick.tstep = "months", lab.tstep = "years", 
+     tick.tstep = "months", lab.tstep = "years", lab.fmt,
      cal.ini=NA, val.ini=NA,
      main, xlab = "Time", ylab=c("Q, [m3/s]"),  
      col = c("blue", "black"), 
@@ -30,15 +30,15 @@ numeric or zoo object with with simulated values
 numeric or zoo object with observed values
 }
   \item{na.rm}{
--) TRUE : the annual mean  value is computed considering only those values different from NA \cr
--) FALSE: if there is AT LEAST one NA within a year, the monthly mean value is NA 
+a logical value indicating whether 'NA' should be stripped before the computation proceeds. \cr
+When an 'NA' value is found at the i-th position in \code{obs} \bold{OR} \code{sim}, the i-th value of \code{obs} \bold{AND} \code{sim} are removed before the computation.
 }
   \item{dates}{
 character, factor or Date object indicating how to obtain the dates for the corresponding values in the \code{sim} and \code{obs} time series \cr
 If \code{dates} is a character or factor, it is converted into Date class, using the date format specified by \code{date.fmt}
 }
   \item{date.fmt}{
-OPTIONAL. character indicating the format in which the dates are stored in \var{dates}, \code{cal.ini} and \code{val.ini}. See \code{format} in \code{\link[base]{format.Date}}. Default value is \kbd{\%Y-\%m-\%d} \cr
+OPTIONAL. character indicating the format in which the dates are stored in \var{dates}, \code{cal.ini} and \code{val.ini}. See \code{format} in \code{\link[base]{as.Date}}. Default value is \kbd{\%Y-\%m-\%d} \cr
 ONLY required when \code{class(dates)=="character"} or \code{class(dates)=="factor"} or when \code{cal.ini} and/or \code{val.ini} is provided.
 }
   \item{pt.style}{
@@ -79,6 +79,9 @@ character indicating the time step that have to be used for putting the labels o
 -) \kbd{days},   \cr
 -) \kbd{months}, \cr
 -) \kbd{years}  
+}
+  \item{lab.fmt}{
+Character indicating with the format to be used for the label of the axis. See \code{format} in \code{\link[base]{as.Date}}. If not specified, it will try \kbd{"\%Y-\%m-\%d"} when \code{lab.tstep=="days"}, \kbd{"\%b"} when \code{lab.tstep=="month"}, and \kbd{"\%Y"} when \code{lab.tstep=="year"}. 
 }
   \item{cal.ini}{
 OPTIONAL. Character, indicating the date in which the calibration period started. \cr

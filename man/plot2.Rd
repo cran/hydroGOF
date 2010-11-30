@@ -11,7 +11,7 @@ It requires the \pkg{hydroTSM} package.
 }
 \usage{
 plot2(x, y, plot.type = "multiple", 
-      tick.tstep = "months", lab.tstep = "years", 
+      tick.tstep = "months", lab.tstep = "years", lab.fmt,
       main, xlab = "Time", ylab=c("x", "y"),
       cal.ini=NA, val.ini=NA, date.fmt="\%Y-\%m-\%d",
       gof.leg = FALSE, gof.digits=2, 
@@ -46,6 +46,9 @@ character, indicating the time step that have to be used for putting the labels 
 -) \kbd{days},    \cr
 -) \kbd{months},  \cr
 -) \kbd{years} 
+}
+  \item{lab.fmt}{
+Character indicating with the format to be used for the label of the axis. See \code{format} in \code{\link[base]{as.Date}}. If not specified, it will try \kbd{"\%Y-\%m-\%d"} when \code{lab.tstep=="days"}, \kbd{"\%b"} when \code{lab.tstep=="month"}, and \kbd{"\%Y"} when \code{lab.tstep=="year"}. 
 }
   \item{main}{
 an overall title for the plot: see \code{\link[graphics]{title}}
