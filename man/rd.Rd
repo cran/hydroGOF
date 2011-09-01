@@ -38,7 +38,7 @@ further arguments passed to or from other methods.
 }
 }
 \details{
-\deqn{rd = 1 - \frac{ \sum_{i=1}^N { \frac{(O_i - S_i)}{O_i}^2} } { \sum_{i=1}^N { \frac{ \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right|}{\bar{O}} ^2 } } }{%
+\deqn{rd = 1 - \frac{ \sum_{i=1}^N { \frac{(O_i - S_i)}{O_i}^2} } { \sum_{i=1}^N { \frac{ \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right|}{\bar{O}} }^2 } }{%
 rd = 1 - [ sum( ( (obs - sim) / obs )^2  ] /  sum( ( (abs(sim - mean(obs) ) + abs(obs - mean(obs) ) ) / mean(obs)  )^2 ) } 
 
 %% This index was developed to  be sensitive to systematic over- or under-prediction, in particular during low flow conditions. \cr
@@ -70,13 +70,15 @@ Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr
 
-The missing values in \code{obs} and \code{sim} are removed before the computation proceeds, and only those positions with non-missing values in \code{obs} and \code{sim} are considered in the computation
+The missing values in \code{obs} and \code{sim} are removed before the computation proceeds, and only those positions with non-missing values in \code{obs} and \code{sim} are considered in the computation. \cr
+
+If some of the observed values are equal to zero (at least one of them), this index can not be computed.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{d}}, \code{\link{md}}
+\code{\link{d}}, \code{\link{md}}, \code{\link{gof}}, \code{\link{ggof}}
 }
 \examples{
 obs <- 1:10

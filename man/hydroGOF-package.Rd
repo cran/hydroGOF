@@ -18,12 +18,12 @@ Quantitative statistics included are: Mean Error (\bold{me}), Mean Absolute Erro
 \tabular{ll}{
 Package: \tab hydroGOF\cr
 Type: \tab Package\cr
-Version: \tab 0.2-2\cr
-Date: \tab 2011-04-14\cr
+Version: \tab 0.3-0\cr
+Date: \tab 2011-09-01\cr
 License: \tab GPL >= 2\cr
 LazyLoad: \tab yes\cr
-Packaged: \tab Thu Apr 14 14:35:24 CEST 2011; MZB \cr
-BuiltUnder: \tab 2.12.2 (2011-02-25); i486-pc-linux-gnu \cr
+Packaged: \tab Thu Sep  1 09:35:10 CEST 2011; MZB \cr
+BuiltUnder: \tab R version 2.13.1 (2011-07-08); i686-pc-linux-gnu (32-bit) \cr
 }
 %%~~ An overview of how to use the package, including the most important functions ~~
 }
@@ -56,6 +56,9 @@ Maintainer: Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
 %%~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{ package }
 \seealso{
+
+\url{http://www.rforge.net/hydroTSM/}. \cr
+
 \url{http://cran.r-project.org/web/packages/hydroTSM/}. \cr
 
 \url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis}
@@ -84,7 +87,7 @@ obs <- EgaEnEstellaQts
 # Generating a simulated daily time series, initially equal to the observed series
 sim <- obs 
 
-# Getting the numeric goodness of fit for the "best" (unattainable) case
+# Getting the numeric goodness-of-fit measures for the "best" (unattainable) case
 gof(sim=sim, obs=obs)
 
 # Randomly changing the first 2000 elements of 'sim', by using a normal distribution 
@@ -94,9 +97,8 @@ sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
 # Getting the new numeric goodness of fit
 gof(sim=sim, obs=obs)
 
-# Graphical representation of 'obs' vs 'sim', along with the numeric goodness of fit 
+# Graphical representation of 'obs' vs 'sim', along with the numeric goodness-of-fit measures
 \dontrun{
-require(hydroTSM)
 ggof(sim=sim, obs=obs)
 }
 }

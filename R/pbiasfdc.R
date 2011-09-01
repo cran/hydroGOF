@@ -36,12 +36,10 @@ pbiasfdc.default <- function (sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, plot
 	 # that are present both in 'x' and 'y' (NON- NA values)
      obs <- as.numeric(obs[vi])
      sim <- as.numeric(sim[vi])
-     
-     require(hydroTSM) # for using the 'fdc' function
-		      
+     		      
      # Computing the FDC for simulations and observations
-     obs.fdc <- fdc(obs, plot=FALSE)
-     sim.fdc <- fdc(sim, plot=FALSE)
+     obs.fdc <- hydroTSM::fdc(obs, plot=FALSE)
+     sim.fdc <- hydroTSM::fdc(sim, plot=FALSE)
      
      # Finding the flow value corresponding to the 'lQ.thr' pbb of excedence
      obs.lQ <- obs[Qposition(obs.fdc, lQ.thr)]
@@ -56,7 +54,10 @@ pbiasfdc.default <- function (sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, plot
      
        pbiasfdc <- 100 * ( ( ( log(sim.hQ) -  log(sim.lQ) ) / denominator ) - 1 )
      
-     } else stop("'log(obs.hQ) -  log(obs.lQ) = 0', it is not possible to compute 'pbiasfdc'") 
+     } else {
+         pbiasfdc <- NA 
+         warning("'log(obs.hQ) -  log(obs.lQ) = 0', it is not possible to compute 'pbiasfdc'") 
+       } # ELSE end
      
       if (plot) {
         tmp <- as.matrix(cbind(obs, sim))
@@ -70,6 +71,12 @@ pbiasfdc.default <- function (sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, plot
   
   
 pbiasfdc.matrix <- function (sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, plot=TRUE, verbose=FALSE, ...){
+
+    # Checking that 'sim' and 'obs' have the same dimensions
+    if ( all.equal(dim(sim), dim(obs)) != TRUE )
+    stop( paste("Invalid argument: dim(sim) != dim(obs) ( [", 
+          paste(dim(sim), collapse=" "), "] != [", 
+          paste(dim(obs), collapse=" "), "] )", sep="") )
 
     pbiasfdc <- rep(NA, ncol(obs))       
           

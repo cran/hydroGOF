@@ -49,9 +49,15 @@ pfactor.default <- function(x, lband, uband, na.rm=TRUE, ...)  {
         
     # Getting the row index in 'q95' of all the observations that are within L95PPU and U95PPU
     within.index <- which((lband <= x) & (x <= uband) )
-     
-    # Getting the best simulated streamflows (skipping days withoud measurements)
-    pfactor <- length( within.index ) / length( x ) 
+    
+    L <- length( x ) 
+    
+    if ( L > 0) {     
+      pfactor <- length( within.index ) / L
+    } else {
+         pfactor <- NA 
+         warning("'length(x)=0', it is not possible to compute 'pfactor'") 
+      } # ELSE end
     
     return(pfactor)
 
@@ -59,6 +65,13 @@ pfactor.default <- function(x, lband, uband, na.rm=TRUE, ...)  {
 
 
 pfactor.matrix <- function (x, lband, uband, na.rm=TRUE, ...){
+
+    # Checking that 'x' and 'lband', 'uband' have the same dimensions
+    if ( all.equal(dim(x), dim(lband), , dim(uband)) != TRUE )
+    stop( paste("Invalid argument: 'dim(x)', 'dim(lband)', and/or 'dim(uband)' doesn't match ( [", 
+          paste(dim(x), collapse=" "), "], [", 
+          paste(dim(lband), collapse=" "), "], [", 
+          paste(dim(uband), collapse=" "), "] )", sep="") )
 
     pfactor <- rep(NA, ncol(x))       
           
@@ -73,8 +86,9 @@ pfactor.matrix <- function (x, lband, uband, na.rm=TRUE, ...){
 
 pfactor.data.frame <- function (x, lband, uband, na.rm=TRUE, ...){ 
  
-  sim <- as.matrix(sim)
-  obs <- as.matrix(obs)
+  x     <- as.matrix(x)
+  lband <- as.matrix(lband)
+  uband <- as.matrix(uband)
    
   pfactor.matrix(x, lband, uband, na.rm=na.rm, ...)
      

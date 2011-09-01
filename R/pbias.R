@@ -36,7 +36,10 @@ pbias.default <- function (sim, obs, na.rm=TRUE, ...){
       
        pbias <- 100 * ( sum( sim - obs ) / denominator )
      
-     } else stop("'sum((obs)=0', it is not possible to compute 'pbias'")  
+     } else {
+        pbias <- NA
+        warning("'sum((obs)=0', it is not possible to compute 'pbias'")  
+       } # ELSE end
      
      return( round(pbias, 1) )
      
@@ -44,6 +47,12 @@ pbias.default <- function (sim, obs, na.rm=TRUE, ...){
   
   
 pbias.matrix <- function (sim, obs, na.rm=TRUE, ...){
+
+   # Checking that 'sim' and 'obs' have the same dimensions
+   if ( all.equal(dim(sim), dim(obs)) != TRUE )
+    stop( paste("Invalid argument: dim(sim) != dim(obs) ( [", 
+          paste(dim(sim), collapse=" "), "] != [", 
+          paste(dim(obs), collapse=" "), "] )", sep="") )
 
    pbias <- rep(NA, ncol(obs))       
           

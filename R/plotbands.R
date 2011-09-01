@@ -1,45 +1,11 @@
 ########################################################################
 # plotbands: Plot a ts with simulated values and two confidence bands  #
 ########################################################################
-#      Date: 13-Oct-2009, 30-Jun-2010; 28-Oct-2010; 28-Nov-2010        #
-########################################################################
-# 'x'        : ts or 'zoo' object with the observed values
-# 'lband'    : ts or 'zoo' object with the values of the lower band
-# 'uband'    : ts or 'zoo' object with the values of the upper band
-# 'sim'      : OPTIONAL. ts or 'zoo' object with the simulated values for 'x'
-# 'x.cex'    : character (or symbol) expansion for 'x' ts: a numerical vector.  This works as a multiple of par("cex")
-# 'x.ty'     : character.  Indicates if the observed series have to be ploted as lines or points. Posiible values are:
-#                -) "lines"  : the observed series are plotted as lines
-#                -) "points" : the observed series are plotted as points
-# 'lty'      : See '?plot.default'. The line type, see 'par'. 
-# 'lwd'      : See '?plot.default'. The line width, see 'par'.}
-# 'col'      : colors to be used for plotting the 'x' and 'sim' ts
-# 'bands.col': color to be used for filling th area between the lower and upper band
-# 'border'   : see '?polygon'. The color to draw the border of the uncertainty bands.  The default 'NA' omits the borders.
-#             Use 'border' = 'NULL', to  use 'par("fg")'
-# 'sim.col'  : OPTIONAL. color to be used for plotting the simulated ts
-# 'main'     : an overall title for the plot: see 'title'
-# 'xlab'     : a title for the x axis: see 'title'
-# 'tick.tstep': string indicating the time step that have to be used for
-#               putting the ticks ont he time axis.
-#               Possible values are: 'days', 'months', 'years'
-# 'lab.tstep' : string indicating the time step that have to be used for
-#               putting the labels ont he time axis.
-# 'cal.ini'   : OPTIONAL. Character with the date in which the calibration period started.
-#               ONLY used for drawing a vertical red line at this date.
-# 'val.ini'   : OPTIONAL. Character with the date in which the validation period started.
-#               ONLY used for drawing a vertical red line at this date.
-# 'date.fmt'  : character indicating the format in which the dates entered are stored in 'cal.ini' adn 'val.ini'. Default value is "\%Y-\%m-\%d"
-# 'gof.leg'   : logical, indicating if the p-factor and r-factor have to be
-#               computed and ploted as legends on the graph.
-# 'gof.digits': OPTIONAL, numeric. Only used when 'gof.leg=TRUE'. 
-#               Decimal places used for rounding p-factor and r-factor
-# 'leg.cex'   : OPTIONAL. numeric. Used for the GoF legend. Character expansion factor *relative* to current
-#               'par("cex")'.  Used for text, and provides the default
-#               for 'pt.cex' and 'title.cex'. Default value = 1
-
-# Example:
-      
+# Author : Mauricio Zambrano-Bigiarini                                 #
+# Started: 13-Oct-2009                                                 #
+# Updates: 30-Jun-2010; 28-Oct-2010; 28-Nov-2010 ;                     # 
+#          15-Apr-2011 ; 17-May-2011                                   #
+########################################################################      
 plotbands <- function(x, lband, uband, sim,
                       
                       dates,
@@ -54,9 +20,9 @@ plotbands <- function(x, lband, uband, sim,
                       bands.col="lightblue",
                       border= NA,
 
-                      tick.tstep= "months", 
-                      lab.tstep= "years",
-                      lab.fmt,
+                      tick.tstep= "auto", 
+                      lab.tstep= "auto",
+                      lab.fmt=NULL,
                       
                       cal.ini=NA, 
                       val.ini=NA, 
@@ -80,19 +46,17 @@ plotbands <- function(x, lband, uband, sim,
                       
                       ...) {
                     
-    # requesting 'hydroTSM' package: 'sfreq', 'vector2zoo', 'drawxaxis'
-    require(hydroTSM)
-
     # Checking  the class of 'x', 'lband', 'uband, and 'sim' (if provided)
-    if ( is.na( match(class(x), c("zoo", "numeric", "integer") ) ) )
-      stop("Invalid argument: 'class(x)' must be in c('zoo', 'numeric', 'integer')")
-    if ( is.na( match(class(lband), c("zoo", "numeric", "integer") ) ) )
-      stop("Invalid argument: 'class(lband)' must be in c('zoo', 'numeric', 'integer')")
-    if ( is.na( match(class(uband), c("zoo", "numeric", "integer") ) ) )
-      stop("Invalid argument: 'class(uband)' must be in c('zoo', 'numeric', 'integer')")      
+    valid.class <- c("xts", "zoo", "numeric", "integer")
+    if ( is.na( match(class(x), valid.class ) ) )
+      stop("Invalid argument: 'class(x)' must be in c('xts', 'zoo', 'numeric', 'integer')")
+    if ( is.na( match(class(lband), valid.class ) ) )
+      stop("Invalid argument: 'class(lband)' must be in c('xts', 'zoo', 'numeric', 'integer')")
+    if ( is.na( match(class(uband), valid.class ) ) )
+      stop("Invalid argument: 'class(uband)' must be in c('xts', 'zoo', 'numeric', 'integer')")      
     if ( !missing(sim) ) {
-      if ( is.na( match(class(sim), c("zoo", "numeric", "integer") ) ) )
-        stop("Invalid argument: 'class(sim)' must be in c('zoo', 'numeric', 'integer')")
+      if ( is.na( match(class(sim), valid.class ) ) )
+        stop("Invalid argument: 'class(sim)' must be in c('xts', 'zoo', 'numeric', 'integer')")
     } # IF end    
 
     # Checking that the lenghts of 'lband' and 'uband' are equal between 
@@ -107,8 +71,7 @@ plotbands <- function(x, lband, uband, sim,
     } # IF end 
     
     # Length of the observed values and all the vectors provided
-    L <- length(x)
-      
+    L <- length(x)      
       
     # Checking 'type'
     if ( length( which( !is.na( match((type), c("lines", "points") ) ) ) ) < 2)
@@ -120,18 +83,15 @@ plotbands <- function(x, lband, uband, sim,
 
     # If the user provided a value for 'cal.ini', it is transformed into a Date class
     if ( !missing(cal.ini) ) cal.ini <- as.Date(cal.ini, format=date.fmt)
+    
     # If the user provided a value for 'val.ini', it is transformed into a Date class
-    if ( !missing(val.ini) ) val.ini <- as.Date(val.ini, format=date.fmt)
-      
-    
-    # Requiring the Zoo Library (Zoo's ordered observations): 'is.zoo', 'as.zoo', and 'plot.zoo' functions
-    require(zoo)
-    
+    if ( !missing(val.ini) ) val.ini <- as.Date(val.ini, format=date.fmt)      
+     
     # If the user didn't provided the dates, but 'x' is a zoo object
     # dates are taken from 'x'
     if ( missing(dates) ) {
     
-      if ( is.zoo(x) ) {
+      if ( zoo::is.zoo(x) ) {
         # class(time(x))== "Date" for 'daily' and 'monthly' time series
         # class(time(x))== "character" for 'annual' time series
         if ( class(time(x)) == "Date" ) { dates <- time(x) 
@@ -139,18 +99,18 @@ plotbands <- function(x, lband, uband, sim,
              dates <- as.Date(time(x), format="%Y") 
           }  
       } else # If there is no way to obtain the dates
-          message("Note: You didn't provide dates, so only a numeric index will be used in the time axis.")  
+          message("[Note: You didn't provide dates, so only a numeric index will be used in the time axis.]")  
           
       # Checking that the dates of 'x', 'lband', 'uband' and 'sim' are equal ,
       # when they are zoo objects    
-      if ( is.zoo(lband) & is.zoo(uband) ) 
+      if ( zoo::is.zoo(lband) & zoo::is.zoo(uband) ) 
         if  ( !all.equal( time(lband), time(uband) ) )
          stop("Invalid argument: time(lband) is different from time(uband)")       
-      if ( is.zoo(x) & is.zoo(uband) ) 
+      if ( zoo::is.zoo(x) & zoo::is.zoo(uband) ) 
         if  ( !all.equal( time(x), time(uband) ) )
           stop("Invalid argument: time(x) is different from the time of the bands")      
       if ( !missing(sim) ) {
-        if ( is.zoo(x) & is.zoo(sim) ) 
+        if ( zoo::is.zoo(x) & zoo::is.zoo(sim) ) 
           if  ( !all.equal( time(x), time(sim) ) )
             stop("Invalid argument: time(x) is different from the time of 'sim'")    
       } # IF end
@@ -159,7 +119,7 @@ plotbands <- function(x, lband, uband, sim,
     
     # If the user provided 'dates', 
     # its length is checked against 'length(x)', and
-    # the values of 'dates' are set to 'x', 'lband', 'uband' and 'sim' 
+    # the values of 'dates' are aplyied to 'x', 'lband', 'uband' and 'sim' 
     # when they are zoo objects 
     if ( !missing(dates) )  { 
   
@@ -179,72 +139,25 @@ plotbands <- function(x, lband, uband, sim,
       # If 'x', 'lband', 'uband' and 'sim' (when provided) are 'zoo' 
       # and the user provides 'dates' (probably new dates), 
       # the dates of the objects are changed to the new date
-      if ( is.zoo(x) )     { time(x)     <- dates }  
-      if ( is.zoo(lband) ) { time(lband) <- dates } 
-      if ( is.zoo(uband) ) { time(uband) <- dates }  
+      if ( zoo::is.zoo(x) )     { time(x)     <- dates }  
+      if ( zoo::is.zoo(lband) ) { time(lband) <- dates } 
+      if ( zoo::is.zoo(uband) ) { time(uband) <- dates }  
       if ( !missing(sim) ) 
         if ( is.zoo(sim) ) { time(sim)   <- dates }  
         
       # If the class of 'x' 'lband', 'uband' and 'sim' (when provided) 
       # are not 'zoo' and the user provides the dates, 
       # then we turn them into a zoo objects
-      if ( !is.zoo(x) )      x     <- vector2zoo(x=x, dates=dates, date.fmt=date.fmt) 
-      if ( !is.zoo(lband) )  lband <- vector2zoo(x=lband, dates=dates, date.fmt=date.fmt) 
-      if ( !is.zoo(uband) )  uband <- vector2zoo(x=uband, dates=dates, date.fmt=date.fmt) 
+      if ( !zoo::is.zoo(x) )      x     <- hydroTSM::vector2zoo(x=x, dates=dates, date.fmt=date.fmt) 
+      if ( !zoo::is.zoo(lband) )  lband <- hydroTSM::vector2zoo(x=lband, dates=dates, date.fmt=date.fmt) 
+      if ( !zoo::is.zoo(uband) )  uband <- hydroTSM::vector2zoo(x=uband, dates=dates, date.fmt=date.fmt) 
       if ( !missing(sim) ) {
-        if ( !is.zoo(sim) )  sim   <- vector2zoo(x=sim, dates=dates, date.fmt=date.fmt) 
-		message("Note: 'sim'  was transformed into a zoo object, and 'time(sim)' was made equal to 'time(obs)'") 
-      }  # IF end     
-    
-    }  # IF end
-       
-    
-    # If 'x' is a zoo object, appropiate ticks and labels are set 
-    # for the Time axis  
-    if ( is.zoo(x) ) {    
-
-        # If the user didn't provided a value for 'tick.tstep' and
-        # the lenght of the daily ts is less than 1 year, the ticks in
-        # the 'x' axis are placed by day; if larger than a year, they are placed by month
-        if ( missing(tick.tstep) ) {    
-          if ( sfreq(x)=="daily" ) {
-            if ( (length(x) <= 366) ) {
-              tick.tstep <- "days"
-            } else tick.tstep <- "months"
-          } else if ( sfreq(x)=="monthly" ) {
-            if ( (length(x) <= 12) ) {
-              tick.tstep <- "days"
-            } else tick.tstep <- "months"
-          } # ELSE end    
-        } # IF end
-    
-        # If the user didn't provided a value for 'lab.tstep' and
-        # the lenght of the daily ts is less than 1 year, the labels in
-        # the 'x' axis are placed by month; if larger than a year, they are placed by year
-        if ( missing(lab.tstep) ) {
-          if ( sfreq(x)=="daily" ) {
-            if (length(x) <=366) {
-              lab.tstep <- "months"
-            } else lab.tstep <- "years"
-          } else if ( sfreq(x)=="monthly" ) {
-            if (length(x) <=12) {
-              lab.tstep <- "months"
-            } else lab.tstep <- "years"
-          }
-        } # IF end
-
-        # If the user didn't provide a value for 'lab.fmt', default values are used
-        if (missing(lab.fmt)) {   
-          if (lab.tstep == "days") { 
-            lab.fmt <- "%Y-%m-%d"
-          } else if (lab.tstep == "months") {
-              lab.fmt <- "%b"   
-            } else if (lab.tstep == "years") {
-              lab.fmt <- "%Y"   
-              } 
-        } # IF end
-    
-    } # IF end
+        if ( !zoo::is.zoo(sim) )  {
+           sim <- hydroTSM::vector2zoo(x=sim, dates=dates, date.fmt=date.fmt) 
+	   message("[Note: 'sim'  was transformed into a zoo object, with 'time(sim)' equal to 'time(obs)']") 
+	} # IF end
+      }  # IF end 
+    }  # IF end       
 
     # Getting the position of the possible NA's
     na.index <- which(is.na(x))
@@ -262,19 +175,28 @@ plotbands <- function(x, lband, uband, sim,
         ylim <- range(lband, uband, x, na.rm=TRUE)
       } else ylim <- range(lband, uband, x, sim, na.rm=TRUE)
     } # IF end
-
+    
     # Creating the plot, but without anything on it, for allowign the call to polygon
-    plot(x, type="n", xaxt = "n", main=main, xlab=xlab, ylab=ylab, ylim=ylim, cex.axis=cex.axis, cex.lab=cex.lab, ...)
+    if ( zoo::is.zoo(x) ) {
+      if ( !xts::is.xts(x) ) x <- xts::as.xts(x)   
+      # Creating the plot, but without anything on it, for allowign the call to polygon
+      plot.xts(x, type="n", axes=FALSE, main=main, xlab=xlab, ylab=ylab, ylim=ylim, 
+         cex.axis=cex.axis, cex.lab=cex.lab, ...) 
+      axis(2, cex.axis=cex.axis, cex.lab=cex.lab)  
+    } else plot(x, type="n", xaxt = "n", main=main, xlab=xlab, ylab=ylab, ylim=ylim, 
+                cex.axis=cex.axis, cex.lab=cex.lab, ...)
 
-    # Plotting the polygon with the uncertainty bounds
+    if ( zoo::is.zoo(lband) & !xts::is.xts(lband) )  lband <- xts::as.xts(lband)
+    if ( zoo::is.zoo(uband) & !xts::is.xts(uband) )  uband <- xts::as.xts(uband)
+    
+    # Plotting the uncertainty bounds (polygon)
     plotbandsonly(lband=lband, uband=uband, dates=dates, date.fmt=date.fmt, 
-                  legend=legend[3], leg.cex=leg.cex,
                   bands.col=bands.col, border= border, ...)
 
-    # Draws monthly ticks in the X axis, but labels only in years
-    if ( !is.na( match(class(x), c("zoo", "ts") ) ) ) {
-      drawxaxis(x, tick.tstep=tick.tstep, lab.tstep=lab.tstep, lab.fmt=lab.fmt, cex.axis=cex.axis)
-    } else Axis(side = 1, labels = TRUE)
+    # Draws custom ticks and labels on the X axis
+    if ( zoo::is.zoo(x) | xts::is.xts(x) ) {
+      hydroTSM::drawTimeAxis(x, tick.tstep=tick.tstep, lab.tstep=lab.tstep, lab.fmt=lab.fmt, cex.axis=cex.axis)
+    } else axis(side = 1, labels = TRUE)
 
     # Plotting the OBSERVED time series, over the polygons
     if (type[1] == "lines") {
@@ -285,6 +207,7 @@ plotbands <- function(x, lband, uband, sim,
       
     # Plotting the SIMULATED time series, over the polygons
     if ( !missing(sim) ) {
+        if ( (zoo::is.zoo(x)) & (!xts::is.xts(sim)) ) sim <- xts::as.xts(sim)
         # Plotting the SIMULATED time series, over the polygons
         if (type[2] == "lines") {
           lines(sim, cex= cex[2], col=col[2], lty=lty[2], lwd=lwd[2], pch=pch[2], ... )

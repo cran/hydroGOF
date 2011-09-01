@@ -73,11 +73,10 @@ It requires the \pkg{hydroTSM} package.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[hydroTSM]{fdc}
+\link[hydroTSM]{fdc}, \code{\link{gof}}
 }
 \examples{
 \dontrun{
-require(hydroTSM)
 sim <- 1:10
 obs <- 1:10
 pbiasfdc(sim, obs)

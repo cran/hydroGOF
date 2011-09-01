@@ -11,11 +11,11 @@ It requires the \pkg{hydroTSM} package.
 }
 \usage{
 plot2(x, y, plot.type = "multiple", 
-      tick.tstep = "months", lab.tstep = "years", lab.fmt,
-      main, xlab = "Time", ylab=c("x", "y"),
+      tick.tstep = "auto", lab.tstep = "auto", lab.fmt=NULL,
+      main, xlab = "Time", ylab,
       cal.ini=NA, val.ini=NA, date.fmt="\%Y-\%m-\%d",
       gof.leg = FALSE, gof.digits=2, 
-      legend=ylab, leg.cex = 1,
+      legend, leg.cex = 1,
       col = c("black", "blue"),
       cex = c(0.5, 0.5), cex.axis=1.2, cex.lab=1.2, 
       lwd= c(1,1), lty=c(1,3), pch = c(1, 9), 
@@ -25,10 +25,10 @@ plot2(x, y, plot.type = "multiple",
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-time series that will be plotted. class(x) must be ts or zoo. If \code{leg.gof=TRUE}, then \code{x} is considered as simulated (for some goodness-of-fit functions this is important)
+time series that will be plotted. class(x) must be ts or zoo. If \code{leg.gof=TRUE}, then \code{x} is considered as \bold{simulated} (for some goodness-of-fit functions this is important)
 }
   \item{y}{
-time series that will be plotted. class(x) must be ts or zoo. If \code{leg.gof=TRUE}, then \code{y} is considered as observed values (for some goodness-of-fit functions this is important)
+time series that will be plotted. class(x) must be ts or zoo. If \code{leg.gof=TRUE}, then \code{y} is considered as \bold{observed} values (for some goodness-of-fit functions this is important)
 }
   \item{plot.type}{
 character, indicating if the 2 ts have to be plotted in the same window or in two different vertical ones. Valid values are: \cr
@@ -36,19 +36,13 @@ character, indicating if the 2 ts have to be plotted in the same window or in tw
 -) \kbd{multiple}: plots the 2 series on 2 multiple vertical plots 
 }
   \item{tick.tstep}{
-character, indicating the time step that have to be used for putting the ticks on the time axis. Valid values are: \cr
--) \kbd{days},    \cr
--) \kbd{months},  \cr
--) \kbd{years} 
+character, indicating the time step that have to be used for putting the ticks on the time axis. Valid values are: \kbd{auto}, \kbd{years}, \kbd{months},\kbd{weeks}, \kbd{days}, \kbd{hours}, \kbd{minutes}, \kbd{seconds}.
 }
   \item{lab.tstep}{
-character, indicating the time step that have to be used for putting the labels on the time axis. Valid values are: \cr
--) \kbd{days},    \cr
--) \kbd{months},  \cr
--) \kbd{years} 
+character, indicating the time step that have to be used for putting the labels on the time axis. Valid values are: \kbd{auto}, \kbd{years}, \kbd{months},\kbd{weeks}, \kbd{days}, \kbd{hours}, \kbd{minutes}, \kbd{seconds}.
 }
   \item{lab.fmt}{
-Character indicating with the format to be used for the label of the axis. See \code{format} in \code{\link[base]{as.Date}}. If not specified, it will try \kbd{"\%Y-\%m-\%d"} when \code{lab.tstep=="days"}, \kbd{"\%b"} when \code{lab.tstep=="month"}, and \kbd{"\%Y"} when \code{lab.tstep=="year"}. 
+Character indicating the format to be used for the label of the axis. See \code{lab.fmt} in \code{\link[hydroTSM]{drawTimeAxis}}.
 }
   \item{main}{
 an overall title for the plot: see \code{\link[graphics]{title}}
@@ -60,8 +54,9 @@ label for the 'x' axis
 label for the 'y' axis 
 }
  \item{cal.ini}{
-OPTIONAL. Character with the date in which the calibration period started. \cr
-ONLY used for drawing a vertical red line at this date. 
+OPTIONAL. Character, indicating the date in which the calibration period started. \cr
+When \code{cal.ini} is provided, all the values in \code{obs} and \code{sim} with dates previous to \code{cal.ini} are SKIPPED from the computation of the goodness-of-fit measures (when \code{gof.leg=TRUE}), but their values are still plotted, in order to examine if the warming up period was too short, acceptable or too long for the chosen calibration period.
+In addition, a vertical red line in drawn at this date. 
 }
   \item{val.ini}{
 OPTIONAL. Character with the date in which the validation period started. \cr
@@ -163,8 +158,11 @@ sim <- obs
 # with mean 10 and standard deviation equal to 1 (default of 'rnorm').
 sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
 
-# Computing the new 'pbias'
+# Plotting 'sim' and 'obs' in 2 separate panels
 plot2(x=obs, y=sim)
+
+# Plotting 'sim' and 'obs' in the same window
+plot2(x=obs, y=sim, plot.type="single")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

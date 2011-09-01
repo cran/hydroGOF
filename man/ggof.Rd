@@ -13,8 +13,8 @@ Missing values in observed and/or simulated values can removed before the comput
 ggof(sim, obs, na.rm = TRUE, dates, date.fmt = "\%Y-\%m-\%d", 
      pt.style = "ts", ftype = "o",  FUN, 
      gof.leg = TRUE,  digits=2, 
-     legend=c("Sim", "Obs"), leg.cex=1,
-     tick.tstep = "months", lab.tstep = "years", lab.fmt,
+     legend, leg.cex=1,
+     tick.tstep = "auto", lab.tstep = "auto", lab.fmt=NULL,
      cal.ini=NA, val.ini=NA,
      main, xlab = "Time", ylab=c("Q, [m3/s]"),  
      col = c("blue", "black"), 
@@ -69,23 +69,18 @@ character of length 2 to appear in the legend.
 OPTIONAL. ONLY used when \code{leg.gof=TRUE}. Character expansion factor for drawing the legend, *relative*  to current 'par("cex")'. Used for text, and provides the default for 'pt.cex' and 'title.cex'. Default value = 1
 }
   \item{tick.tstep}{
-character, indicating the time step that have to be used for putting the ticks on the time axis. Valid values are: \cr
--) \kbd{days},   \cr
--) \kbd{months}, \cr
--) \kbd{years}  
+character, indicating the time step that have to be used for putting the ticks on the time axis. Valid values are: \kbd{auto}, \kbd{years}, \kbd{months},\kbd{weeks}, \kbd{days}, \kbd{hours}, \kbd{minutes}, \kbd{seconds}.
 }
-  \item{lab.tstep}{
-character indicating the time step that have to be used for putting the labels on the time axis. Valid values are: \cr
--) \kbd{days},   \cr
--) \kbd{months}, \cr
--) \kbd{years}  
+ \item{lab.tstep}{
+character, indicating the time step that have to be used for putting the labels on the time axis. Valid values are: \kbd{auto}, \kbd{years}, \kbd{months},\kbd{weeks}, \kbd{days}, \kbd{hours}, \kbd{minutes}, \kbd{seconds}.
 }
   \item{lab.fmt}{
-Character indicating with the format to be used for the label of the axis. See \code{format} in \code{\link[base]{as.Date}}. If not specified, it will try \kbd{"\%Y-\%m-\%d"} when \code{lab.tstep=="days"}, \kbd{"\%b"} when \code{lab.tstep=="month"}, and \kbd{"\%Y"} when \code{lab.tstep=="year"}. 
+Character indicating the format to be used for the label of the axis. See \code{lab.fmt} in \code{\link[hydroTSM]{drawTimeAxis}}.
 }
   \item{cal.ini}{
 OPTIONAL. Character, indicating the date in which the calibration period started. \cr
-ONLY used for drawing a vertical red line at this date. 
+When \code{cal.ini} is provided, all the values in \code{obs} and \code{sim} with dates previous to \code{cal.ini} are SKIPPED from the computation of the goodness-of-fit measures (when \code{gof.leg=TRUE}), but their values are still plotted, in order to examine if the warming up period was too short, acceptable or too long for the chosen calibration period.
+In addition, a vertical red line in drawn at this date. 
 }
   \item{val.ini}{
 OPTIONAL. Character, the date in which the validation period started. \cr
@@ -129,7 +124,7 @@ further arguments passed to or from other methods.
 Plots observed and simulated values in the same graph.
 
 If \code{gof.leg=TRUE}, it computes the numerical values of: \cr
-'me', 'mae', 'rms', 'nrms', 'PBIAS',  'RSR, 'rSD', 'NSeff', 'mNSeff', 'rNSeff', 'd', 'md, 'rd', 'cp', 'r', 'r.Spearman', 'R2', 'bR2'
+'me', 'mae', 'rmse', 'nrmse', 'PBIAS',  'RSR, 'rSD', 'NSeff', 'mNSeff', 'rNSeff', 'd', 'md, 'rd', 'cp', 'r', 'r.Spearman', 'R2', 'bR2', 'KGE'
 }
 \value{
 \item{me}{Mean Error}
@@ -209,14 +204,31 @@ gof(sim=sim, obs=obs)
 # with mean 10 and standard deviation equal to 1 (default of 'rnorm').
 sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
 
-# Getting the new numeric goodness of fit 
+# Getting the new numeric goodness-of-fit measures
 gof(sim=sim, obs=obs)
 
 # Getting the graphical representation of 'obs' and 'sim' along with the numeric 
-# goodness of fit for the daily and monthly time series 
+# goodness-of-fit measures for the daily and monthly time series 
 \dontrun{
-require(hydroTSM)
 ggof(sim=sim, obs=obs, ftype="dm", FUN=mean)
+}
+
+# Computing the daily residuals 
+# even if this is a dummy example, it is enough for illustrating the capability
+r <- sim-obs
+
+# Summarizing and plotting the residuals
+\dontrun{
+library(hydroTSM)
+
+# summary
+smry(r) 
+
+# daily, monthly and annual plots, boxplots and histograms
+hydroplot(r, FUN=mean)
+
+# seasonal plots and boxplots
+hydroplot(r, FUN=mean, pfreq="seasonal")
 }
 
 }

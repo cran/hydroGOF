@@ -52,7 +52,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
 }
 \note{
-\code{obs} and \code{sim} has to have the same length/dimension \cr
+\code{obs} and \code{sim} have to have the same length/dimension \cr
 
 The missing values in \code{obs} and \code{sim} are removed before the computation proceeds, and only those positions with non-missing values in \code{obs} and \code{sim} are considered in the computation
 }
@@ -60,7 +60,7 @@ The missing values in \code{obs} and \code{sim} are removed before the computati
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{me}}
+\code{\link{me}}, \code{\link{gof}}, \code{\link{ggof}}
 }
 \examples{
 obs <- 1:10

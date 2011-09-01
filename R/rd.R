@@ -1,7 +1,8 @@
 ########################################
 # 'rd': Relative Index of Agreement    #
 ########################################
-# April 15th, 2010                     #
+# Started: April 15th, 2010            #
+# Updates: 01-Jun-2011                 #
 ########################################
 # Ref
 # 1) Krause, P., Boyle, D. P., and Bäse, F.: 
@@ -40,6 +41,12 @@ rd.default <- function (sim, obs, na.rm=TRUE, ...){
      obs <- obs[vi]
      sim <- sim[vi]
      
+     # Testing for zero values in obs, which leads to -Inf as result
+     zero.index <- which(obs==0)
+     if (length(zero.index > 0) ) {
+       warning("'rd' can not be computed: some elements in 'obs' are zero !", call.=FALSE)
+     } # IF end
+     
      # the next two lines are required for avoiding an strange behaviour 
      # of the difference function when sim and obs are time series.
      if ( !is.na(match(class(sim), c("ts", "zoo"))) ) sim <- as.numeric(sim)
@@ -47,14 +54,17 @@ rd.default <- function (sim, obs, na.rm=TRUE, ...){
      
      # Mean of the observed values
      Om <- mean(obs)
-      
+     
      denominator <- sum( ( ( abs(sim - Om) + abs(obs - Om) ) / Om )^2 )
      
      if (denominator != 0) {
       
        rd <- 1 - ( sum( ( (obs - sim) / obs)^2 ) / denominator )
      
-     } else stop("'sum( ( ( abs(sim-Om) + abs(obs-Om) ) / Om )^2 ) = 0', it is not possible to compute 'rd'")  
+     } else {
+         rd <- NA
+         warning("'sum( ( ( abs(sim-Om) + abs(obs-Om) ) / Om )^2 ) = 0', it is not possible to compute 'rd'")  
+       } # ELSE end
      
      return(rd) 
      
@@ -62,6 +72,12 @@ rd.default <- function (sim, obs, na.rm=TRUE, ...){
 
 
 rd.matrix <- function (sim, obs, na.rm=TRUE, ...){ 
+
+ # Checking that 'sim' and 'obs' have the same dimensions
+ if ( all.equal(dim(sim), dim(obs)) != TRUE )
+    stop( paste("Invalid argument: dim(sim) != dim(obs) ( [", 
+          paste(dim(sim), collapse=" "), "] != [", 
+          paste(dim(obs), collapse=" "), "] )", sep="") )
 
  rd <- rep(NA, ncol(obs))       
           
