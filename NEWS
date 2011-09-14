@@ -2,6 +2,10 @@ NEWS/ChangeLog for hydroGOF
 --------------------------
 
 
+0.3-1	14-Sep-2011
+	o 'ggof'  : fixed problem when 'ylim' is specified by the user (the issue was in the 'plot2' function)
+	o 'plot2' : fixed problem when 'ylim' is specified by the user
+
 0.3-0	01-Sep-2011
 
 	o NAMESPACE created, which leads to reduced dependency on the package hydroTSM.
