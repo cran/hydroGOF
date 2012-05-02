@@ -44,6 +44,7 @@ further arguments passed to or from other methods.
 %%\details{
 %%}
 \value{
+The output of the \code{gof} gunction is a matrix with one column only, and the following rows:
 \item{me}{Mean Error}
 \item{mae}{Mean Absolute Error}
 \item{mse}{Mean Squared Error}
@@ -53,9 +54,9 @@ further arguments passed to or from other methods.
 \item{pbiasfdc}{PBIAS in the slope of the midsegment of the Flow Duration Curve}
 \item{RSR}{Ratio of RMSE to the Standard Deviation of the Observations, RSR = rms / sd(obs). ( 0 <= RSR <= +Inf )}
 \item{rSD}{Ratio of Standard Deviations, rSD = sd(sim) / sd(obs)}
-\item{NSeff}{Nash-Sutcliffe Efficiency ( -Inf <= NSeff <= 1 )}
-\item{mNSeff}{Modified Nash-Sutcliffe Efficiency}
-\item{rNSeff}{Relative Nash-Sutcliffe Efficiency }
+\item{NSE}{Nash-Sutcliffe Efficiency ( -Inf <= NSE <= 1 )}
+\item{mNSE}{Modified Nash-Sutcliffe Efficiency}
+\item{rNSE}{Relative Nash-Sutcliffe Efficiency }
 \item{d}{Index of Agreement ( 0 <= d <= 1 )}
 \item{d1}{Modified Index of Agreement}
 \item{rd}{Relative Index of Agreement}
@@ -84,6 +85,8 @@ further arguments passed to or from other methods.
 \cite{Yapo P. O., Gupta H. V., Sorooshian S., 1996. Automatic calibration of conceptual rainfall-runoff models: sensitivity to calibration data. Journal of Hydrology. v181 i1-4. 23--48} \cr
 
 \cite{Yilmaz, K. K., H. V. Gupta, and T. Wagener  (2008), A process-based diagnostic approach to model evaluation: Application to the NWS distributed hydrologic model, Water Resour. Res., 44, W09417, doi:10.1029/2007WR006716}
+
+\cite{Hoshin V. Gupta, Harald Kling, Koray K. Yilmaz, Guillermo F. Martinez. Decomposition of the mean squared error and NSE performance criteria: Implications for improving hydrological modelling. Journal of Hydrology, Volume 377, Issues 1-2, 20 October 2009, Pages 80-91. DOI: 10.1016/j.jhydrol.2009.08.003. ISSN 0022-1694}
 }
 \author{
 Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
@@ -131,8 +134,18 @@ sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
 # Getting the new numeric goodness of fit
 gof(sim=sim, obs=obs)
 
-# Getting the graphical representation of 'obs' and 'sim' along with the numeric goodness of fit 
+# Storing a matrix object with all the GoFs:
+g <-  gof(sim, obs)
+
+# Getting only the RMSE
+g[4,1]
+g["RMSE",]
+
 \dontrun{
+# Writting all the GoFs into a TXT file
+write.table(g, "GoFs.txt", col.names=FALSE, quote=FALSE)
+
+# Getting the graphical representation of 'obs' and 'sim' along with the numeric goodness of fit 
 ggof(sim=sim, obs=obs)
 }
 

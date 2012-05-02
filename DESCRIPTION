@@ -2,8 +2,8 @@ Package: hydroGOF
 Type: Package
 Title: Goodness-of-fit functions for comparison of simulated and
         observed hydrological time series
-Version: 0.3-2
-Date: 2011-10-07
+Version: 0.3-3
+Date: 2012-05-02
 Author: Mauricio Zambrano-Bigiarini [aut, cre]
 Author@R: c(person("Mauricio", "Zambrano-Bigiarini", email =
         "mauricio.zambrano@ing.unitn.it", role=c("aut", "cre") ) )
@@ -28,6 +28,6 @@ Keywords: hydrology, hydrological modelling, hydrologic modeling,
         calibration, verification, goodness-of-fit, objective function,
         simulated vs observed, observed vs simulated
 LazyLoad: yes
-Packaged: 2011-10-07 07:42:36 UTC; zambrhe
+Packaged: 2012-05-02 13:48:40 UTC; zambrhe
 Repository: CRAN
-Date/Publication: 2011-10-08 06:44:01
+Date/Publication: 2012-05-02 15:05:04
