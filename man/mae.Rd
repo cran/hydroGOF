@@ -1,9 +1,16 @@
+% File mae.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{mae}
 \Rdversion{1.1}
 \alias{mae}
 \alias{mae.default}
 \alias{mae.matrix}
 \alias{mae.data.frame}
+\alias{mae.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Mean Absolute Error
@@ -19,6 +26,8 @@ mae(sim, obs, ...)
 \method{mae}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{mae}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{mae}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,7 +58,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \url{http://en.wikipedia.org/wiki/Mean_absolute_error}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} have to have the same length/dimension \cr

@@ -1,3 +1,10 @@
+% File rNSE.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
+
 \name{rNSE}
 \Rdversion{1.1}
 \alias{rNSeff}
@@ -5,6 +12,7 @@
 \alias{rNSE.default}
 \alias{rNSE.matrix}
 \alias{rNSE.data.frame}
+\alias{rNSE.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Relative Nash-Sutcliffe efficiency
@@ -20,6 +28,8 @@ rNSE(sim, obs, ...)
 \method{rNSE}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{rNSE}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{rNSE}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -53,7 +63,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Legates, D. R., and G. J. McCabe Jr. (1999), Evaluating the Use of "Goodness-of-Fit" Measures in Hydrologic and Hydroclimatic Model Validation, Water Resour. Res., 35(1), 233-241}. 
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

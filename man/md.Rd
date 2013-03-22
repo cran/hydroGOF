@@ -1,9 +1,16 @@
+% File md.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{md}
 \Rdversion{1.1}
 \alias{md}
 \alias{md.default}
 \alias{md.matrix}
 \alias{md.data.frame}
+\alias{md.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Modified index of agreement
@@ -20,6 +27,8 @@ md(sim, obs, ...)
 \method{md}{data.frame}(sim, obs, j=1, na.rm=TRUE, ...)
 
 \method{md}{matrix}(sim, obs, j=1, na.rm=TRUE, ...)
+
+\method{md}{zoo}(sim, obs, j=1, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -67,7 +76,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

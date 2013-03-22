@@ -1,9 +1,16 @@
+%% File cp.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or lat
+
 \name{cp}
 \Rdversion{1.1}
 \alias{cp}
 \alias{cp.default}
 \alias{cp.matrix}
 \alias{cp.data.frame}
+\alias{cp.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Coefficient of persistence
@@ -19,6 +26,8 @@ cp(sim, obs, ...)
 \method{cp}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{cp}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{cp}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -59,7 +68,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Moriasi, D. N. et al. (2007). Model Evaluation Guidelines for Systematic Quantification of Accuracy in Watershed Simulations. Transactions of the ASABE, 50:(3), 885-900}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

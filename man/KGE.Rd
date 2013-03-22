@@ -1,7 +1,7 @@
 %% File KGE.Rd
 %% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
 %%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2012 Mauricio Zambrano-Bigiarini
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or late
 
 \name{KGE}
@@ -10,6 +10,7 @@
 \alias{KGE.default}
 \alias{KGE.matrix}
 \alias{KGE.data.frame}
+\alias{KGE.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Kling-Gupta Efficiency
@@ -40,6 +41,9 @@ KGE(sim, obs, ...)
              out.type=c("single", "full"), ...)
 
 \method{KGE}{matrix}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"), 
+             out.type=c("single", "full"), ...)
+             
+\method{KGE}{zoo}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"), 
              out.type=c("single", "full"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -105,7 +109,7 @@ numeric with 3 elements: the Pearson product-moment correlation coefficient (\sQ
 \cite{Kling, H., M. Fuchs, and M. Paulin (2012), Runoff conditions in the upper Danube basin under an ensemble of climate change scenarios. Journal of Hydrology, Volumes 424-425, 6 March 2012, Pages 264-277, DOI:10.1016/j.jhydrol.2012.01.011}
 }
 \author{
-Mauricio Zambrano-Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano-Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

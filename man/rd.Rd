@@ -1,9 +1,17 @@
+% File rd.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
+
 \name{rd}
 \Rdversion{1.1}
 \alias{rd}
 \alias{rd.default}
 \alias{rd.matrix}
 \alias{rd.data.frame}
+\alias{rd.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Relative Index of Agreement
@@ -20,6 +28,8 @@ rd(sim, obs, ...)
 \method{rd}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{rd}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{rd}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,7 +48,7 @@ further arguments passed to or from other methods.
 }
 }
 \details{
-\deqn{rd = 1 - \frac{ \sum_{i=1}^N { \frac{(O_i - S_i)}{O_i}^2} } { \sum_{i=1}^N { \frac{ \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right|}{\bar{O}} }^2 } }{%
+\deqn{rd = 1 - \frac{ \sum_{i=1}^N { \left( \frac{O_i - S_i}{O_i} \right) ^2} } { \sum_{i=1}^N {  \left( \frac{ \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right|}{\bar{O}} \right)^2 } } }{%
 rd = 1 - [ sum( ( (obs - sim) / obs )^2  ] /  sum( ( (abs(sim - mean(obs) ) + abs(obs - mean(obs) ) ) / mean(obs)  )^2 ) } 
 
 %% This index was developed to  be sensitive to systematic over- or under-prediction, in particular during low flow conditions. \cr
@@ -65,7 +75,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 }
 
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

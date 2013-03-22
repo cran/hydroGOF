@@ -1,7 +1,7 @@
 %% File ggof.Rd
 %% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
 %%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2012 Mauricio Zambrano-Bigiarini
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or lat
 
 \name{ggof}
@@ -180,7 +180,7 @@ If \code{gof.leg=TRUE}, it computes the numerical values of: \cr
 \cite{Criss, R. E. and Winston, W. E. (2008), Do Nash values have value? Discussion and alternate proposals. Hydrological Processes, 22: 2723-2725. doi: 10.1002/hyp.7072}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 %%\note{
 %%

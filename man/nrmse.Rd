@@ -1,9 +1,16 @@
+% File nrmse.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{nrmse}
 \Rdversion{1.1}
 \alias{nrmse}
 \alias{nrmse.default}
 \alias{nrmse.matrix}
 \alias{nrmse.data.frame}
+\alias{nrmse.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Normalized Root Mean Square Error
@@ -19,6 +26,8 @@ nrmse(sim, obs, ...)
 \method{nrmse}{data.frame}(sim, obs, na.rm=TRUE, norm="sd", ...)
 
 \method{nrmse}{matrix}(sim, obs, na.rm=TRUE, norm="sd", ...)
+
+\method{nrmse}{zoo}(sim, obs, na.rm=TRUE, norm="sd", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,7 +63,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 %% ~put references to the literature/web site here ~
 %%}
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

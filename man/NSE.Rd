@@ -1,3 +1,9 @@
+% File NSE.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{NSE}
 \Rdversion{1.1}
 \alias{NSeff}
@@ -5,6 +11,7 @@
 \alias{NSE.default}
 \alias{NSE.matrix}
 \alias{NSE.data.frame}
+\alias{NSE.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Nash-Sutcliffe Efficiency
@@ -20,6 +27,8 @@ NSE(sim, obs, ...)
 \method{NSE}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{NSE}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{NSE}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -61,7 +70,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \url{http://en.wikipedia.org/wiki/Nash\%E2\%80\%93Sutcliffe_model_efficiency_coefficient}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

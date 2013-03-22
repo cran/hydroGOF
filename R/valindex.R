@@ -1,7 +1,7 @@
 # File valindex.R
 # Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
 #                                 http://cran.r-project.org/web/packages/hydroGOF/
-# Copyright 2011-2012 Mauricio Zambrano-Bigiarini
+# Copyright 2011-2013 Mauricio Zambrano-Bigiarini
 # Distributed under GPL 2 or later
 
 ################################################################################
@@ -11,6 +11,7 @@
 ################################################################################
 # Started: 19-Jan-2009                                                         #
 # Updates: 08-May-2012                                                         #
+#          22-Mar-2013                                                         #
 ################################################################################
 # 'x'     : vector (numeric, xts, zoo)
 # 'y'     : vector (numeric, xts, zoo)
@@ -23,8 +24,11 @@ valindex.default <- function(sim, obs, ...) {
 
    if ( length(obs) != length(sim) ) {
 	  stop( "Invalid argument: 'length(sim) != length(obs)' !! (", length(sim), "!=", length(obs), ") !!" )
-   } else  
-       return( which(!is.na(sim) & !is.na(obs)) )
+   } else { 
+       index <- which(!is.na(sim) & !is.na(obs))
+       if (length(index==0)) warning("'sim' and 'obs' are empty or they do not have any common pair of elements with data !!")
+       return( index  )
+     } # ELSE end
      
 } # 'valindex' END
 

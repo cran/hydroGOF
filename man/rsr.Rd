@@ -1,9 +1,17 @@
+% File rsr.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
+
 \name{rsr}
 \Rdversion{1.1}
 \alias{rsr}
 \alias{rsr.default}
 \alias{rsr.matrix}
 \alias{rsr.data.frame}
+\alias{rsr.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Ratio of RMSE to the standard deviation of the observations
@@ -19,6 +27,8 @@ rsr(sim, obs, ...)
 \method{rsr}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{rsr}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{rsr}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,7 +58,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Moriasi, D.N., Arnold, J.G., Van Liew, M.W., Bingner, R.L., Harmel, R.D., Veith, T.L. 2007. Model evaluation guidelines for systematic quantification of accuracy in watershed simulations. Transactions of the ASABE. 50(3):885-900}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

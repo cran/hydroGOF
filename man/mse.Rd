@@ -1,9 +1,16 @@
+% File mse.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{mse}
 \Rdversion{1.1}
 \alias{mse}
 \alias{mse.default}
 \alias{mse.matrix}
 \alias{mse.data.frame}
+\alias{mse.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Mean Squared Error
@@ -19,6 +26,8 @@ mse(sim, obs, ...)
 \method{mse}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{mse}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{mse}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,7 +58,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Yapo P. O., Gupta H. V., Sorooshian S., 1996. Automatic calibration of conceptual rainfall-runoff models: sensitivity to calibration data. Journal of Hydrology. v181 i1-4. 23-48}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

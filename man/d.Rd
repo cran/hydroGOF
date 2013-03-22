@@ -1,9 +1,16 @@
+%% File d.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or lat
+
 \name{d}
 \Rdversion{1.1}
 \alias{d}
 \alias{d.default}
 \alias{d.matrix}
 \alias{d.data.frame}
+\alias{d.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Index of Agreement
@@ -21,6 +28,8 @@ d(sim, obs, ...)
 \method{d}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{d}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{d}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,7 +48,7 @@ further arguments passed to or from other methods.
 }
 }
 \details{
-\deqn{d = 1 - \frac{\sum_{i=1}^N {(O_i - S_i)^2} } { \sum_{i=1}^N { \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right| } } }{%
+\deqn{d = 1 - \frac{\sum_{i=1}^N {(O_i - S_i)^2} } { \sum_{i=1}^N { ( \left| S_i -  \bar{O} \right| + \left| O_i -  \bar{O}  \right| } )^2 } }{%
 d = 1 - [ ( sum( (obs - sim)^2 ) ] /  sum( ( abs(sim - mean(obs)) + abs(obs - mean(obs))  )^2 ) } 
 
 The Index of Agreement (d) developed by Willmott (1981) as a standardized measure of the degree of model prediction error and varies between 0 and 1. \cr
@@ -63,7 +72,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

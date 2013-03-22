@@ -1,3 +1,9 @@
+% File pfactor.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{pfactor}
 \Rdversion{1.1}
 \alias{pfactor}
@@ -59,7 +65,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Abbaspour, C., Karim (2007), User manual for SWAT-CUP, SWAT calibration and uncertainty analysis programs, 93pp, Eawag: Swiss Fed. Inst. of Aquat. Sci. and Technol. Dubendorf, Switzerland, Available at \url{http://www.eawag.ch/organisation/abteilungen/siam/software/swat/index_EN}}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 So far, the argument \code{na.rm} is not being taken into account.

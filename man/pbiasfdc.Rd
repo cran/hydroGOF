@@ -1,9 +1,16 @@
+% File pbiasfdc.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{pbiasfdc}
 \Rdversion{1.1}
 \alias{pbiasfdc}
 \alias{pbiasfdc.default}
 \alias{pbiasfdc.matrix}
 \alias{pbiasfdc.data.frame}
+\alias{pbiasfdc.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Percent Bias in the Slope of the Midsegment of the Flow Duration Curve
@@ -21,6 +28,9 @@ pbiasfdc(sim, obs, ...)
        plot=TRUE, verbose=FALSE, ...)
 
 \method{pbiasfdc}{matrix}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
+       plot=TRUE, verbose=FALSE, ...)
+       
+\method{pbiasfdc}{zoo}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
        plot=TRUE, verbose=FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -62,7 +72,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Yilmaz, K. K., H. V. Gupta, and T. Wagener  (2008), A process-based diagnostic approach to model evaluation: Application to the NWS distributed hydrologic model, Water Resour. Res., 44, W09417, doi:10.1029/2007WR006716}
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 The result is given in percentage (\%). \cr

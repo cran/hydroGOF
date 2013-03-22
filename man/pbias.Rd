@@ -1,9 +1,16 @@
+% File pbias.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{pbias}
 \Rdversion{1.1}
 \alias{pbias}
 \alias{pbias.default}
 \alias{pbias.matrix}
 \alias{pbias.data.frame}
+\alias{pbias.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Percent Bias
@@ -19,6 +26,8 @@ pbias(sim, obs, ...)
 \method{pbias}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{pbias}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{pbias}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -55,7 +64,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 \cite{Sorooshian, S., Q. Duan, and V. K. Gupta. 1993. Calibration of rainfall-runoff models: Application of global optimization to the Sacramento Soil Moisture Accounting Model, Water Resources Research, 29 (4), 1185-1194, doi:10.1029/92WR02617}.
 }
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr

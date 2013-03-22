@@ -1,9 +1,16 @@
+% File me.Rd
+%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
+%%                                 http://cran.r-project.org/web/packages/hydroGOF/
+%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Distributed under GPL 2 or later
+
 \name{me}
 \Rdversion{1.1}
 \alias{me}
 \alias{me.default}
 \alias{me.matrix}
 \alias{me.data.frame}
+\alias{me.zoo}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Mean Error
@@ -19,6 +26,8 @@ me(sim, obs, ...)
 \method{me}{data.frame}(sim, obs, na.rm=TRUE, ...)
 
 \method{me}{matrix}(sim, obs, na.rm=TRUE, ...)
+
+\method{me}{zoo}(sim, obs, na.rm=TRUE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,7 +58,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 %% ~put references to the literature/web site here ~
 %%}
 \author{
-Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
+Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
 }
 \note{
 \code{obs} and \code{sim} has to have the same length/dimension \cr
