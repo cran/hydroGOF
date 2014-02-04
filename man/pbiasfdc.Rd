@@ -1,7 +1,7 @@
 % File pbiasfdc.Rd
 %% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
 %%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2013 Mauricio Zambrano-Bigiarini
+%% Copyright 2011-2014 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{pbiasfdc}
@@ -70,6 +70,8 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 }
 \references{
 \cite{Yilmaz, K. K., H. V. Gupta, and T. Wagener  (2008), A process-based diagnostic approach to model evaluation: Application to the NWS distributed hydrologic model, Water Resour. Res., 44, W09417, doi:10.1029/2007WR006716}
+
+\cite{Yilmaz, K. K., H. V. Gupta, and T. Wagener  (2008), A process-based diagnostic approach to model evaluation: Application to the NWS distributed hydrologic model, Water Resour. Res., 44, W09417, doi:10.1029/2007WR006716}
 }
 \author{
 Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>
@@ -97,7 +99,6 @@ pbiasfdc(sim, obs)
 
 ##################
 # Loading daily streamflows of the Ega River (Spain), from 1961 to 1970
-require(zoo)
 data(EgaEnEstellaQts)
 obs <- EgaEnEstellaQts
 
