@@ -14,6 +14,7 @@
 #          10-Oct-2012                                                         #
 #          18-Oct-2012 ; 19-Oct-2012                                           #
 #          24-Jan-2014                                                         #
+#          28-Feb-2016 ; 17-Jul-2016                                           #
 ################################################################################
 # The optimal value of KGE is 1
 
@@ -71,7 +72,7 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
     sigma.obs <- sd(obs, na.rm=na.rm)
          
     # Pearson product-moment correlation coefficient
-    r     <- .rPearson(sim, obs)
+    r     <- rPearson(sim, obs)
 
     # Alpha is a measure of relative variability between simulated and observed values (See Ref1)
     Alpha <- sigma.sim / sigma.obs
@@ -106,6 +107,12 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
       } # ELSE end  
             
   } else {
+      r    <- NA
+      Beta <- NA
+      vr   <- NA
+      if(method=="2012") {
+        vr.stg <- "Gamma"
+      } else vr.stg <- "Alpha" 
       KGE <- NA
       warning("There are no pairs of 'sim' and 'obs' without missing values !")
     } # ELSE end
@@ -201,7 +208,7 @@ KGE.data.frame <- function (sim, obs, s=c(1,1,1), na.rm=TRUE,
 # Author: Mauricio Zambrano-Bigiarini                                          #
 ################################################################################
 # Started: 22-Mar-2013                                                         #
-# Updates:                                                                     #
+# Updates: 16-Aug-2016                                                         #
 ################################################################################
 KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
                     method=c("2009", "2012"), out.type=c("single", "full"), ...){
@@ -210,7 +217,7 @@ KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
     if (is.zoo(obs)) obs <- zoo::coredata(obs)
     
     if (is.matrix(sim) | is.data.frame(sim)) {
-       KGE.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type="single", ...)
+       KGE.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, ...)
     } else NextMethod(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, ...)
      
   } # 'KGE.zoo' end

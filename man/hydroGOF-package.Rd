@@ -1,7 +1,7 @@
 % File hydroGOF-package.Rd
-%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-%%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2009-2014 Mauricio Zambrano-Bigiarini
+%% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+%%                                 https://CRAN.R-project.org/package=hydroGOF
+%% Copyright 2009-2017 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{hydroGOF-package}
@@ -24,12 +24,12 @@ Quantitative statistics included are: Mean Error (\bold{me}), Mean Absolute Erro
 \tabular{ll}{
 Package: \tab hydroGOF\cr
 Type: \tab Package\cr
-Version: \tab 0.3-8\cr
-Date: \tab 2014-02-04\cr
+Version: \tab 0.3-10\cr
+Date: \tab 2017-08-08\cr
 License: \tab GPL >= 2\cr
 LazyLoad: \tab yes\cr
-Packaged: \tab Tue Feb  4 16:21:59 CLST 2014; MZB \cr
-BuiltUnder: \tab R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"; x86_64-pc-linux-gnu (64-bit) \cr
+Packaged: \tab Tue Aug  8 09:11:25 CLT 2017; MZB \cr
+BuiltUnder: \tab R version 3.4.1 (2017-06-30) -- "Single Candle"; x86_64-pc-linux-gnu (64-bit)) \cr
 }
 %%~~ An overview of how to use the package, including the most important functions ~~
 }
@@ -59,6 +59,8 @@ Maintainer: Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
 
 \cite{Nash, J.E. and J.V. Sutcliffe, River flow forecasting through conceptual models. Part 1: a discussion of principles, J. Hydrol. 10 (1970), pp. 282--290} \cr
 
+\cite{Pushpalatha, R., Perrin, C., Le Moine, N. and Andreassian, V. (2012). A review of efficiency criteria suitable for evaluating low-flow simulations. Journal of Hydrology, 420, 171-182. DOI: 10.1016/j.jhydrol.2011.11.055}  \cr 
+
 \cite{Yapo P. O., Gupta H. V., Sorooshian S., 1996. Automatic calibration of conceptual rainfall-runoff models: sensitivity to calibration data. Journal of Hydrology. v181 i1-4. 23--48} \cr
 
 \cite{Yilmaz, K. K., H. V. Gupta, and T. Wagener  (2008), A process-based diagnostic approach to model evaluation: Application to the NWS distributed hydrologic model, Water Resour. Res., 44, W09417, doi:10.1029/2007WR006716} \cr
@@ -67,9 +69,8 @@ Maintainer: Mauricio Zambrano Bigiarini <mauricio.zambrano@ing.unitn.it>
 \keyword{ package }
 \seealso{
 
-\url{http://www.rforge.net/hydroPSO/} \cr
-\url{http://www.rforge.net/hydroTSM/} \cr
-\url{http://rwiki.sciviews.org/doku.php?id=guides:tutorials:hydrological_data_analysis}
+\url{https://CRAN.R-project.org/package=hydroPSO} \cr
+\url{https://CRAN.R-project.org/package=hydroTSM}
 }
 \examples{
 obs <- 1:100
