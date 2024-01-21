@@ -1,7 +1,8 @@
 # File plotbandsonly.R
-# Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-#                                 http://cran.r-project.org/web/packages/hydroGOF/
-# Copyright 2010-2013 Mauricio Zambrano-Bigiarini
+# Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+#                                 https://cran.r-project.org/package=hydroGOF
+#                                 http://www.rforge.net/hydroGOF/
+# Copyright 2013-2024 Mauricio Zambrano-Bigiarini
 # Distributed under GPL 2 or later
 
 ################################################################################
@@ -12,6 +13,7 @@
 # Started: Date: 24-Nov-2010                                                   #
 ################################################################################
 # Updates: 15-Apr-2013                                                         #
+#          28-Dec-2022                                                         #
 ################################################################################
       
 plotbandsonly <- function(lband, uband,
@@ -45,8 +47,8 @@ plotbandsonly <- function(lband, uband,
       if ( zoo::is.zoo(x) | xts::is.xts(x) ) {
         # class(time(x))== "Date" for 'daily' and 'monthly' time series
         # class(time(x))== "character" for 'annual' time series
-        if ( class(time(x)) == "Date" ) { dates <- time(x) 
-        } else if ( class(time(x)) == "character" ) {  
+        if ( inherits(time(x), "Date") ) { dates <- time(x) 
+        } else if ( inherits(time(x), "character") ) {  
              dates <- as.Date(time(x), format="%Y") 
           }  
       } else # If there is no way to obtain the dates

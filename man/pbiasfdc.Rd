@@ -1,7 +1,8 @@
-% File pbiasfdc.Rd
-%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-%%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2014 Mauricio Zambrano-Bigiarini
+%% File pbiasfdc.Rd
+%% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+%%                                 https://cran.r-project.org/package=hydroGOF
+%%                                 http://www.rforge.net/hydroGOF/
+%% Copyright 2008-2024 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{pbiasfdc}
@@ -22,16 +23,24 @@ Percent Bias in the slope of the midsegment of the flow duration curve (FDC) [\%
 pbiasfdc(sim, obs, ...)
 
 \method{pbiasfdc}{default}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
-       plot=TRUE, verbose=FALSE, ...)
+       plot=TRUE, verbose=FALSE, fun=NULL, ..., 
+       epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+       epsilon.value=NA)
 
 \method{pbiasfdc}{data.frame}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
-       plot=TRUE, verbose=FALSE, ...)
+        plot=TRUE, verbose=FALSE, fun=NULL, ..., 
+        epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+        epsilon.value=NA)
 
 \method{pbiasfdc}{matrix}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
-       plot=TRUE, verbose=FALSE, ...)
+        plot=TRUE, verbose=FALSE, fun=NULL, ..., 
+        epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+        epsilon.value=NA)
        
 \method{pbiasfdc}{zoo}(sim, obs, lQ.thr=0.7, hQ.thr=0.2, na.rm=TRUE, 
-       plot=TRUE, verbose=FALSE, ...)
+        plot=TRUE, verbose=FALSE, fun=NULL, ..., 
+        epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+        epsilon.value=NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -56,8 +65,32 @@ a logical value indicating if the flow duration curves corresponding to \code{ob
   \item{verbose}{
 logical; if TRUE, progress messages are printed 
 }
+  \item{fun}{
+function to be applied to \code{sim} and \code{obs} in order to obtain transformed values thereof before computing this goodness-of-fit index.
+
+The first argument MUST BE a numeric vector with any name (e.g., \code{x}), and additional arguments are passed using \code{\dots}.
+}
   \item{\dots}{
-further arguments passed to the \link[hydroTSM]{fdc} function of the \pkg{hydroTSM} package or from other methods.
+arguments passed to \code{fun}, in addition to the mandatory first numeric vector.
+}
+  \item{epsilon.type}{
+argument used to define a numeric value to be added to both \code{sim} and \code{obs} before applying \code{fun}. 
+
+It is was  designed to allow the use of logarithm and other similar functions that do not work with zero values.
+
+Valid values of \code{epsilon.type} are:
+
+1) \kbd{"none"}: \code{sim} and \code{obs} are used by \code{fun} without the addition of any numeric value. This is the default option.
+
+2) \kbd{"Pushpalatha2012"}: one hundredth (1/100) of the mean observed values is added to both \code{sim} and \code{obs} before applying \code{fun}, as described in Pushpalatha et al. (2012). 
+
+3) \kbd{"otherFactor"}: the numeric value defined in the \code{epsilon.value} argument is used to multiply the the mean observed values, instead of the one hundredth (1/100) described in Pushpalatha et al. (2012). The resulting value is then added to both \code{sim} and \code{obs}, before applying \code{fun}.
+
+4) \kbd{"otherValue"}: the numeric value defined in the \code{epsilon.value} argument is directly added to both \code{sim} and \code{obs}, before applying \code{fun}.
+}
+  \item{epsilon.value}{
+ -) when \code{epsilon.type="otherValue"} it represents the numeric value to be added to both \code{sim} and \code{obs} before applying \code{fun}. \cr
+ -) when \code{epsilon.type="otherFactor"} it represents the numeric factor used to multiply the mean of the observed values, instead of the one hundredth (1/100) described in Pushpalatha et al. (2012). The resulting value is then added to both \code{sim} and \code{obs} before applying \code{fun}.
 }
 }
 %%\details{
@@ -85,19 +118,22 @@ It requires the \pkg{hydroTSM} package.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[hydroTSM]{fdc}, \code{\link{gof}}
+\link[hydroTSM]{fdc}, \code{\link{pbias}}, \code{\link{mae}}, \code{\link{mse}}, \code{\link{rmse}}, \code{\link{ubRMSE}}, \code{\link{nrmse}}, \code{\link{ssq}}, \code{\link{gof}}, \code{\link{ggof}}
 }
 \examples{
 \dontrun{
-sim <- 1:10
+##################
+# Example 1: basic ideal case
 obs <- 1:10
+sim <- 1:10
 pbiasfdc(sim, obs)
 
-sim <- 2:11
 obs <- 1:10
+sim <- 2:11
 pbiasfdc(sim, obs)
 
 ##################
+# Example 2: 
 # Loading daily streamflows of the Ega River (Spain), from 1961 to 1970
 data(EgaEnEstellaQts)
 obs <- EgaEnEstellaQts
@@ -105,15 +141,91 @@ obs <- EgaEnEstellaQts
 # Generating a simulated daily time series, initially equal to the observed series
 sim <- obs 
 
-# Computing the relative index of agreement for the "best" (unattainable) case
+# Computing the 'pbiasfdc' for the "best" (unattainable) case
 pbiasfdc(sim=sim, obs=obs)
 
-# Randomly changing the first 2000 elements of 'sim', by using a normal distribution 
+##################
+# Example 3: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values. 
+#            This random noise has more relative importance for ow flows than 
+#            for medium and high flows.
+  
+# Randomly changing the first 1826 elements of 'sim', by using a normal distribution 
 # with mean 10 and standard deviation equal to 1 (default of 'rnorm').
-sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
+sim[1:1826] <- obs[1:1826] + rnorm(1826, mean=10)
+ggof(sim, obs)
 
-# Computing the new relative index of agreement
-pbiasfdc(sim=sim, obs=obs, col=c("black", "blue"))
+pbiasfdc(sim=sim, obs=obs)
+
+##################
+# Example 4: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' during computations.
+
+pbiasfdc(sim=sim, obs=obs, fun=log)
+
+# Verifying the previous value:
+lsim <- log(sim)
+lobs <- log(obs)
+pbiasfdc(sim=lsim, obs=lobs)
+
+##################
+# Example 5: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and adding the Pushpalatha2012 constant
+#            during computations
+
+pbiasfdc(sim=sim, obs=obs, fun=log, epsilon.type="Pushpalatha2012")
+
+# Verifying the previous value, with the epsilon value following Pushpalatha2012
+eps  <- mean(obs, na.rm=TRUE)/100
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+pbiasfdc(sim=lsim, obs=lobs)
+
+##################
+# Example 6: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and adding a user-defined constant
+#            during computations
+
+eps <- 0.01
+pbiasfdc(sim=sim, obs=obs, fun=log, epsilon.type="otherValue", epsilon.value=eps)
+
+# Verifying the previous value:
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+pbiasfdc(sim=lsim, obs=lobs)
+
+##################
+# Example 7: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and using a user-defined factor
+#            to multiply the mean of the observed values to obtain the constant
+#            to be added to 'sim' and 'obs' during computations
+
+fact <- 1/50
+pbiasfdc(sim=sim, obs=obs, fun=log, epsilon.type="otherFactor", epsilon.value=fact)
+
+# Verifying the previous value:
+eps  <- fact*mean(obs, na.rm=TRUE)
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+pbiasfdc(sim=lsim, obs=lobs)
+
+##################
+# Example 8: pbiasfdc for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying a 
+#            user-defined function to 'sim' and 'obs' during computations
+
+fun1 <- function(x) {sqrt(x+1)}
+
+pbiasfdc(sim=sim, obs=obs, fun=fun1)
+
+# Verifying the previous value, with the epsilon value following Pushpalatha2012
+sim1 <- sqrt(sim+1)
+obs1 <- sqrt(obs+1)
+pbiasfdc(sim=sim1, obs=obs1)
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

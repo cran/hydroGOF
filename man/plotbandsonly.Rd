@@ -1,7 +1,8 @@
-% File plotbandsonly.Rd
-%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-%%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2014 Mauricio Zambrano-Bigiarini
+%% File plotbandsonly.Rd
+%% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+%%                                 https://cran.r-project.org/package=hydroGOF
+%%                                 http://www.rforge.net/hydroGOF/
+%% Copyright 2008-2024 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{plotbandsonly}
@@ -41,7 +42,7 @@ See \code{\link[graphics]{polygon}}. Color to be used for filling the area betwe
 See \code{\link[graphics]{polygon}}. The color to draw the border.  The default, 'NULL', means to  use 'par("fg")'.  Use 'border = NA' to omit borders.
 }
   \item{\dots}{
-further arguments passed to the code{\link[graphics]{polygon}} function for plotting the bands, or from other methods
+further arguments passed to the \code{\link[graphics]{polygon}} function for plotting the bands, or from other methods
 }
 }
 %%\details{

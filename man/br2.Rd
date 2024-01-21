@@ -2,7 +2,7 @@
 %% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
 %%                                 https://CRAN.R-project.org/package=hydroGOF
 %%                                 http://www.rforge.net/hydroGOF/
-%% Copyright 2011-2020 Mauricio Zambrano-Bigiarini
+%% Copyright 2011-2024 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or lat
 
 \name{br2}
@@ -22,13 +22,21 @@ Coefficient of determination (r2) multiplied by the slope of the regression line
 \usage{
 br2(sim, obs, ...)
 
-\method{br2}{default}(sim, obs, na.rm=TRUE, use.abs=FALSE, ...)
+\method{br2}{default}(sim, obs, na.rm=TRUE, use.abs=FALSE, fun=NULL, ..., 
+             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+             epsilon.value=NA)
 
-\method{br2}{data.frame}(sim, obs, na.rm=TRUE, use.abs=FALSE, ...)
+\method{br2}{data.frame}(sim, obs, na.rm=TRUE, use.abs=FALSE, fun=NULL, ..., 
+             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+             epsilon.value=NA)
 
-\method{br2}{matrix}(sim, obs, na.rm=TRUE, use.abs=FALSE, ...)
+\method{br2}{matrix}(sim, obs, na.rm=TRUE, use.abs=FALSE, fun=NULL, ..., 
+             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+             epsilon.value=NA)
 
-\method{br2}{zoo}(sim, obs, na.rm=TRUE, use.abs=FALSE, ...)
+\method{br2}{zoo}(sim, obs, na.rm=TRUE, use.abs=FALSE, fun=NULL, ..., 
+             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+             epsilon.value=NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -47,16 +55,40 @@ logical value indicating whether the condition to select the formula used to com
 Krausse et al. (2005) uses 'b<=1' as condition, but strictly speaking this condition should be 'abs(b)<=1'. However, if your model simulations are somewhat "close" to the observations, this condition should not have much impact on the computation of 'br2'. \cr
 This argument was introduced in hydroGOF 0.4-0, following a comment by E. White. Its default value is \code{FALSE} to ensure compatibility with previous versions of hydroGOF.
 }
+  \item{fun}{
+function to be applied to \code{sim} and \code{obs} in order to obtain transformed values thereof before computing this goodness-of-fit index.
+
+The first argument MUST BE a numeric vector with any name (e.g., \code{x}), and additional arguments are passed using \code{\dots}.
+}
   \item{\dots}{
-further arguments passed to or from other methods.
+arguments passed to \code{fun}, in addition to the mandatory first numeric vector.
+}
+  \item{epsilon.type}{
+argument used to define a numeric value to be added to both \code{sim} and \code{obs} before applying \code{fun}. 
+
+It is was  designed to allow the use of logarithm and other similar functions that do not work with zero values.
+
+Valid values of \code{epsilon.type} are:
+
+1) \kbd{"none"}: \code{sim} and \code{obs} are used by \code{fun} without the addition of any numeric value. This is the default option.
+
+2) \kbd{"Pushpalatha2012"}: one hundredth (1/100) of the mean observed values is added to both \code{sim} and \code{obs} before applying \code{fun}, as described in Pushpalatha et al. (2012). 
+
+3) \kbd{"otherFactor"}: the numeric value defined in the \code{epsilon.value} argument is used to multiply the the mean observed values, instead of the one hundredth (1/100) described in Pushpalatha et al. (2012). The resulting value is then added to both \code{sim} and \code{obs}, before applying \code{fun}.
+
+4) \kbd{"otherValue"}: the numeric value defined in the \code{epsilon.value} argument is directly added to both \code{sim} and \code{obs}, before applying \code{fun}.
+}
+  \item{epsilon.value}{
+ -) when \code{epsilon.type="otherValue"} it represents the numeric value to be added to both \code{sim} and \code{obs} before applying \code{fun}. \cr
+ -) when \code{epsilon.type="otherFactor"} it represents the numeric factor used to multiply the mean of the observed values, instead of the one hundredth (1/100) described in Pushpalatha et al. (2012). The resulting value is then added to both \code{sim} and \code{obs} before applying \code{fun}.
 }
 }
 \details{
 \deqn{ br2 = |b| R2 , b <= 1  ; br2 = \frac{R2}{|b|}, b > 1  }{%
 br2 = abs(b)*R2, b <= 1; br2= R2/abs(b), b > 1 } 
 
-A model that systematically over or under-predicts all the time will still result in "good" \code{r2} (close to 1), even if all predictions were wrong (Krause et al., 2005).
-The \code{br2} coefficient allows accounting for the discrepancy in the magnitude of two signals (depicted by 'b') as well as their dynamics (depicted by \code{r2})
+A model that systematically over or under-predicts all the time will still result in "good" \code{R2} (close to 1), even if all predictions were wrong (Krause et al., 2005).
+The \code{br2} coefficient allows accounting for the discrepancy in the magnitude of two signals (depicted by 'b') as well as their dynamics (depicted by \code{R2})
 }
 \value{
 br2 between \code{sim} and \code{obs}. \cr
@@ -65,6 +97,8 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 }
 \references{
 \cite{Krause, P., Boyle, D. P., and Base, F.: Comparison of different efficiency criteria for hydrological model assessment, Adv. Geosci., 5, 89-97, 2005}
+
+\cite{Krstic, G., Krstic, N.S., Zambrano-Bigiarini, M. (2016). The br2-weighting Method for Estimating the Effects of Air Pollution on Population Health. Journal of Modern Applied Statistical Methods, 15(2), 42. doi:10.22237/jmasm/1478004000}
 
 }
 \author{
@@ -81,9 +115,11 @@ The slope \code{b} is computed as the coefficient of the linear regression betwe
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link[stats]{cor}}, \code{\link[stats]{lm}}, \code{\link{gof}}, \code{\link{ggof}}
+\code{\link{R2}}, \code{\link{rPearson}}, \code{\link{rSpearman}}, \code{\link[stats]{cor}}, \code{\link[stats]{lm}}, \code{\link{gof}}, \code{\link{ggof}}
 }
 \examples{
+##################
+# Example 1: 
 # Looking at the difference between r2 and br2 for a case with systematic 
 # over-prediction of observed values
 obs <- 1:10
@@ -105,6 +141,7 @@ ggof(sim2, obs)
 br2.2 <- r2/2 # br2 = 0.5
 
 ##################
+# Example 2: 
 # Loading daily streamflows of the Ega River (Spain), from 1961 to 1970
 data(EgaEnEstellaQts)
 obs <- EgaEnEstellaQts
@@ -112,15 +149,91 @@ obs <- EgaEnEstellaQts
 # Generating a simulated daily time series, initially equal to the observed series
 sim <- obs 
 
-# Computing 'br2' for the "best" (unattainable) case
+# Computing the 'br2' for the "best" (unattainable) case
 br2(sim=sim, obs=obs)
 
-# Randomly changing the first 2000 elements of 'sim', by using a normal distribution 
+##################
+# Example 3: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values. 
+#            This random noise has more relative importance for ow flows than 
+#            for medium and high flows.
+  
+# Randomly changing the first 1826 elements of 'sim', by using a normal distribution 
 # with mean 10 and standard deviation equal to 1 (default of 'rnorm').
-sim[1:2000] <- obs[1:2000] + rnorm(2000, mean=10)
+sim[1:1826] <- obs[1:1826] + rnorm(1826, mean=10)
+ggof(sim, obs)
 
-# Computing the new  'br2'
 br2(sim=sim, obs=obs)
+
+##################
+# Example 4: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' during computations.
+
+br2(sim=sim, obs=obs, fun=log)
+
+# Verifying the previous value:
+lsim <- log(sim)
+lobs <- log(obs)
+br2(sim=lsim, obs=lobs)
+
+##################
+# Example 5: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and adding the Pushpalatha2012 constant
+#            during computations
+
+br2(sim=sim, obs=obs, fun=log, epsilon.type="Pushpalatha2012")
+
+# Verifying the previous value, with the epsilon value following Pushpalatha2012
+eps  <- mean(obs, na.rm=TRUE)/100
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+br2(sim=lsim, obs=lobs)
+
+##################
+# Example 6: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and adding a user-defined constant
+#            during computations
+
+eps <- 0.01
+br2(sim=sim, obs=obs, fun=log, epsilon.type="otherValue", epsilon.value=eps)
+
+# Verifying the previous value:
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+br2(sim=lsim, obs=lobs)
+
+##################
+# Example 7: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying (natural) 
+#            logarithm to 'sim' and 'obs' and using a user-defined factor
+#            to multiply the mean of the observed values to obtain the constant
+#            to be added to 'sim' and 'obs' during computations
+
+fact <- 1/50
+br2(sim=sim, obs=obs, fun=log, epsilon.type="otherFactor", epsilon.value=fact)
+
+# Verifying the previous value:
+eps  <- fact*mean(obs, na.rm=TRUE)
+lsim <- log(sim+eps)
+lobs <- log(obs+eps)
+br2(sim=lsim, obs=lobs)
+
+##################
+# Example 8: br2 for simulated values equal to observations plus random noise 
+#            on the first half of the observed values and applying a 
+#            user-defined function to 'sim' and 'obs' during computations
+
+fun1 <- function(x) {sqrt(x+1)}
+
+br2(sim=sim, obs=obs, fun=fun1)
+
+# Verifying the previous value, with the epsilon value following Pushpalatha2012
+sim1 <- sqrt(sim+1)
+obs1 <- sqrt(obs+1)
+br2(sim=sim1, obs=obs1)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

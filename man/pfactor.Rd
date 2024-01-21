@@ -1,7 +1,8 @@
-% File pfactor.Rd
-%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-%%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2014 Mauricio Zambrano-Bigiarini
+%% File pfactor.Rd
+%% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+%%                                 https://cran.r-project.org/package=hydroGOF
+%%                                 http://www.rforge.net/hydroGOF/
+%% Copyright 2008-2024 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{pfactor}
@@ -62,7 +63,7 @@ If \code{sim} and \code{obs} are matrixes, the returned value is a vector, with 
 
 \cite{Schuol, J., K. Abbaspour, R. Srinivasan, and H. Yang (2008b), Estimation of freshwater availability in the West African sub-continent using the SWAT hydrologic model, Journal of Hydrology, 352(1-2), 30, doi:10.1016/j.jhydrol.2007.12.025} \cr
 
-\cite{Abbaspour, C., Karim (2007), User manual for SWAT-CUP, SWAT calibration and uncertainty analysis programs, 93pp, Eawag: Swiss Fed. Inst. of Aquat. Sci. and Technol. Dubendorf, Switzerland, Available at \url{http://www.eawag.ch/organisation/abteilungen/siam/software/swat/index_EN}}
+\cite{Abbaspour, C., Karim (2007), User manual for SWAT-CUP, SWAT calibration and uncertainty analysis programs, 93pp, Eawag: Swiss Fed. Inst. of Aquat. Sci. and Technol. Dubendorf, Switzerland}
 }
 \author{
 Mauricio Zambrano Bigiarini <mzb.devel@gmail.com>

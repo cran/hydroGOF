@@ -1,7 +1,8 @@
-% File md.Rd
-%% Part of the hydroGOF R package, http://www.rforge.net/hydroGOF/ ; 
-%%                                 http://cran.r-project.org/web/packages/hydroGOF/
-%% Copyright 2011-2014 Mauricio Zambrano-Bigiarini
+%% File md.Rd
+%% Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF ; 
+%%                                 https://cran.r-project.org/package=hydroGOF
+%%                                 http://www.rforge.net/hydroGOF/
+%% Copyright 2008-2024 Mauricio Zambrano-Bigiarini
 %% Distributed under GPL 2 or later
 
 \name{md}
@@ -22,13 +23,21 @@ If 'x' is a matrix or a data frame, a vector of the modified index of agreement 
 \usage{
 md(sim, obs, ...)
 
-\method{md}{default}(sim, obs, j=1, na.rm=TRUE, ...)
+\method{md}{default}(sim, obs, j=1, na.rm=TRUE, fun=NULL, ...,
+            epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+            epsilon.value=NA)
 
-\method{md}{data.frame}(sim, obs, j=1, na.rm=TRUE, ...)
+\method{md}{data.frame}(sim, obs, j=1, na.rm=TRUE, fun=NULL, ...,
+            epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+            epsilon.value=NA)
 
-\method{md}{matrix}(sim, obs, j=1, na.rm=TRUE, ...)
+\method{md}{matrix}(sim, obs, j=1, na.rm=TRUE, fun=NULL, ...,
+            epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+            epsilon.value=NA)
 
-\method{md}{zoo}(sim, obs, j=1, na.rm=TRUE, ...)
+\method{md}{zoo}(sim, obs, j=1, na.rm=TRUE, fun=NULL, ...,
+            epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+            epsilon.value=NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,8 +54,31 @@ numeric, with the exponent to be used in the computation of the modified index o
 a logical value indicating whether 'NA' should be stripped before the computation proceeds. \cr
 When an 'NA' value is found at the i-th position in \code{obs} \bold{OR} \code{sim}, the i-th value of \code{obs} \bold{AND} \code{sim} are removed before the computation.
 }
+  \item{fun}{
+function to be applied to \code{sim} and \code{obs} in order to obtain transformed values thereof before computing the modified index of agreement.
+
+The first argument MUST BE a numeric vector with any name (e.g., \code{x}), and additional arguments are passed using \code{\dots}.
+}
   \item{\dots}{
-further arguments passed to or from other methods.
+arguments passed to \code{fun}, in addition to the mandatory first numeric vector.
+}
+  \item{epsilon.type}{
+argument used to define a numeric value to be added to both \code{sim} and \code{obs} before applying \code{fun}. 
+
+It is was  designed to allow the use of logarithm and other similar functions that do not work with zero values.
+
+Valid values of \code{epsilon.type} are:
+
+1) \kbd{"none"}: \code{sim} and \code{obs} are used by \code{fun} without the addition of any nummeric value.
+
+2) \kbd{"Pushpalatha2012"}: one hundredth (1/100) of the mean observed values is added to both \code{sim} and \code{obs} before applying \code{fun}, as described in Pushpalatha et al. (2012). 
+
+3) \kbd{"otherFactor"}: the numeric value defined in the \code{epsilon.value} argument is used to multiply the the mean observed values, instead of the one hundredth (1/100) described in Pushpalatha et al. (2012). The resulting value is then added to both \code{sim} and \code{obs}, before applying \code{fun}.
+
+4) \kbd{"otherValue"}: the numeric value defined in the \code{epsilon.value} argument is directly added to both \code{sim} and \code{obs}, before applying \code{fun}.
+}
+  \item{epsilon.value}{
+ numeric value to be added to both \code{sim} and \code{obs} when \code{epsilon.type="otherValue"}.
 }
 }
 \details{
@@ -87,7 +119,7 @@ The missing values in \code{obs} and \code{sim} are removed before the computati
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{d}}, \code{\link{rd}}, \code{\link{gof}}, \code{\link{ggof}}
+\code{\link{d}}, \code{\link{dr}}, \code{\link{rd}}, \code{\link{gof}}, \code{\link{ggof}}
 }
 \examples{
 obs <- 1:10
