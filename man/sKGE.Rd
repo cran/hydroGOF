@@ -24,22 +24,22 @@ This goodness-of-fit measure was developed by Fowler et al. (2018), as a modific
 \usage{
 sKGE(sim, obs, ...)
 
-\method{sKGE}{default}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"),
+\method{sKGE}{default}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012", "2021"),
               start.month=1, out.PerYear=FALSE, fun=NULL, ...,
               epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
               epsilon.value=NA)
 
-\method{sKGE}{data.frame}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"),
+\method{sKGE}{data.frame}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012", "2021"),
               start.month=1, out.PerYear=FALSE, fun=NULL, ...,
               epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
               epsilon.value=NA)
 
-\method{sKGE}{matrix}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"),
+\method{sKGE}{matrix}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012", "2021"),
               start.month=1, out.PerYear=FALSE, fun=NULL, ...,
               epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
               epsilon.value=NA)
              
-\method{sKGE}{zoo}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012"),
+\method{sKGE}{zoo}(sim, obs, s=c(1,1,1), na.rm=TRUE, method=c("2009", "2012", "2021"),
               start.month=1, out.PerYear=FALSE, fun=NULL, ...,
               epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
               epsilon.value=NA)
@@ -66,6 +66,8 @@ character, indicating the formula used to compute the variability ratio in the K
 -) \kbd{2009}: the variability is defined as \sQuote{Alpha}, the ratio of the standard deviation of \code{sim} values to the standard deviation of \code{obs}. This is the default option. See Gupta et al. (2009).
 
 -) \kbd{2012}: the variability is defined as \sQuote{Gamma}, the ratio of the coefficient of variation of \code{sim} values to the coefficient of variation of \code{obs}. See Kling et al. (2012). 
+
+-) \kbd{2021}: the bias is defined as \sQuote{Beta}, the ratio of \code{mean(sim)} minus \code{mean(obs)} to the standard deviation of \code{obs}. The variability is defined as \sQuote{Alpha}, the ratio of the standard deviation of \code{sim} values to the standard deviation of \code{obs}. See Tang et al. (2021). 
 }
   \item{start.month}{
 [OPTIONAL]. Only used when the (hydrological) year of interest is different from the calendar year.
@@ -73,7 +75,7 @@ character, indicating the formula used to compute the variability ratio in the K
 numeric in [1:12] indicating the starting month of the (hydrological) year. Numeric values in [1, 12] represent months in [January, December]. By default \code{start.month=1}.
 }
   \item{out.PerYear}{
-logical, indicating the whether the output of the function has to include the Kling-Gupta efficiencies obtained for the individual years in \code{sim} and \code{obs} or not.
+logical, indicating whether the output of this function has to include the Kling-Gupta efficiencies obtained for the individual years in \code{sim} and \code{obs} or not.
 }
   \item{fun}{
 function to be applied to \code{sim} and \code{obs} in order to obtain transformed values thereof before computing this goodness-of-fit index.
@@ -104,18 +106,18 @@ Valid values of \code{epsilon.type} are:
 }
 }
 \details{
-Garcia et al. (2017) tested different objective functions and found that the mean value of the KGE applied to the streamflows (i.e., KGE(Q)) and the KGE applied to the inverse of the streamflows (i.e., KGE(1/Q) is able to provide a an aceptable representation of low-flow indices important for water management. They also found that KGE applied to a transformation of streamflow values (e.g., log)  is inadequate to capture low-flow indices important for water management. \cr
+Garcia et al. (2017) tested different objective functions and found that the mean value of the KGE applied to the streamflows (i.e., KGE(Q)) and the KGE applied to the inverse of the streamflows (i.e., KGE(1/Q) is able to provide a an aceptable representation of low-flow indices important for water management. They also found that KGE applied to a transformation of streamflow values (e.g., log)  is inadequate to capture low-flow indices important for water management. 
 
-The robustness of their findings depends more on the climate variability rather than the objective function, and they are insensitive to the hydrological model used in the evaluation.\cr
+The robustness of their findings depends more on the climate variability rather than the objective function, and they are insensitive to the hydrological model used in the evaluation.
 
-Traditional Kling-Gupta efficiencies (Gupta et al., 2009; Kling et al., 2012) range from -Inf to 1 and, therefore, KGElf should also range from -Inf to 1. Essentially, the closer to 1, the more similar \code{sim} and \code{obs} are. \cr
+Traditional Kling-Gupta efficiencies (Gupta et al., 2009; Kling et al., 2012) range from -Inf to 1 and, therefore, sKGE should also range from -Inf to 1. Essentially, the closer to 1, the more similar \code{sim} and \code{obs} are.
 
 Knoben et al. (2019) showed that traditional Kling-Gupta (Gupta et al., 2009; Kling et al., 2012) values greater than -0.41 indicate that a model improves upon the mean flow benchmark, even if the model's KGE value is negative.
 }
 \value{
 If \code{out.PerYear=FALSE}: numeric with the Split Kling-Gupta efficiency between \code{sim} and \code{obs}. If \code{sim} and \code{obs} are matrices, the output value is a vector, with the Split Kling-Gupta efficiency between each column of \code{sim} and \code{obs}
 
-If \code{out.PerYear=FALSE}: a list of two elements:
+If \code{out.PerYear=TRUE}: a list of two elements:
 \item{sKGE.value}{
 numeric with the Split Kling-Gupta efficiency. If \code{sim} and \code{obs} are matrices, the output value is a vector, with the Split Kling-Gupta efficiency between each column of \code{sim} and \code{obs}
 }
@@ -136,7 +138,7 @@ numeric with the Kling-Gupta efficincies obtained for the individual years in \c
 
 \cite{Santos, L.; Thirel, G.; Perrin, C. (2018). Pitfalls in using log-transformed flows within the sKGE criterion. doi:10.5194/hess-22-4583-2018}
 
-\cite{Knoben, W. J.; Freer, J. E.; Woods, R. A. (2019). Inherent benchmark or not? Comparing Nash-Sutcliffe and Kling-Gupta efficiency scores. Hydrology and Earth System Sciences, 23(10), 4323-4331. doi:10.5194/hess-23-4323-2019.}
+\cite{Knoben, W.J.; Freer, J.E.; Woods, R.A. (2019). Inherent benchmark or not? Comparing Nash-Sutcliffe and Kling-Gupta efficiency scores. Hydrology and Earth System Sciences, 23(10), 4323-4331. doi:10.5194/hess-23-4323-2019.}
 }
 \author{
 Mauricio Zambrano-Bigiarini <mzb.devel@gmail.com>
@@ -168,7 +170,7 @@ KGE(sim=sim, obs=obs, method="2009", out.type="full")
 # KGE 2012
 KGE(sim=sim, obs=obs, method="2012", out.type="full")
 
-# sKGE (Garcia et al., 2017):
+# sKGE (Fowler et al., 2018):
 sKGE(sim=sim, obs=obs, method="2012")
 
 ##################
@@ -265,6 +267,23 @@ sKGE(sim=sim, obs=obs, fun=fun1)
 sim1 <- sqrt(sim+1)
 obs1 <- sqrt(obs+1)
 sKGE(sim=sim1, obs=obs1)
+
+##################
+# Example 9: sKGE for a two-column data frame where simulated values are equal to 
+#            observations plus random noise on the first half of the observed values 
+
+SIM <- cbind(sim, sim)
+OBS <- cbind(obs, obs)
+
+sKGE(sim=SIM, obs=OBS)
+
+##################
+# Example 10: sKGE for each year, where simulated values are given in a two-column data 
+#             frame equal to the observations plus random noise on the first half of the 
+#             observed values 
+SIM <- cbind(sim, sim)
+OBS <- cbind(obs, obs)
+sKGE(sim=SIM, obs=OBS, out.PerYear=TRUE)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

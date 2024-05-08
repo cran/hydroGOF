@@ -1,53 +1,42 @@
-# File KGE.R
+# File KGEkm.R
 # Part of the hydroGOF R package, https://github.com/hzambran/hydroGOF
 #                                 https://cran.r-project.org/package=hydroGOF
 #                                 http://www.rforge.net/hydroGOF/ ;
-# Copyright 2011-2023 Mauricio Zambrano-Bigiarini
+# Copyright 2024-2024 Mauricio Zambrano-Bigiarini
 # Distributed under GPL 2 or later
 
 ################################################################################
-# 'KGE': Kling-Gupta Efficiency                                                #
+# 'KGEkm': Kling-Gupta Efficiency with knowable-moments                        #
 ################################################################################
 # Author : Mauricio Zambrano-Bigiarini                                         #
 ################################################################################
-# Started: 18-Jan-2011                                                         #
-# Updates: 25-Aug-2011                                                         #
-#          10-Oct-2012                                                         #
-#          18-Oct-2012 ; 19-Oct-2012                                           #
-#          24-Jan-2014                                                         #
-#          28-Feb-2016 ; 17-Jul-2016                                           #
-#          12-Jul-2022 ; 13-Jul-2022                                           #
-#          11-Jul-2023 ; 08-Nov-2023                                           #
+# Started: 06-May-2024                                                         #
+# Updates: 07-May-2024                                                         #
 ################################################################################
-# The optimal value of KGE is 1
-
-# This goodness-of-fit measure was developed by Gupta et al. (2009) to provide a 
-# diagnostically interesting decomposition of the Nash-Sutcliffe efficiency 
-# (and hence MSE), which facilitates the analysis of the relative importance of  
-# its different components (correlation, bias and variability) in the context of 
-# hydrological modelling. 
-
-# Kling et al. (2012) proposed a revised version of this index (KGE') to 
-# ensure that the bias and variability ratios are not cross-correlated.
-
-# Tang et al. (2021) proposed a revised version of this index to avoid the 
-# anomalously negative KGE' or KGE values when the mean value is close to zero.
+# The optimal value of KGEkm is 1
 
 # Ref1:
-# Gupta, H.V.; Kling, H.; Yilmaz, K.K.; Martinez, G.F. (2009).
+# Pizarro, A. and Jorquera, J. (2024). Advancing objective functions in 
+# hydrological modelling: Integrating knowable moments for improved simulation 
+# accuracy. Journal of Hydrology, 634, 131071. doi:10.1016/j.jhydrol.2024.131071
+
+# Ref2:
+# Kling, H., M. Fuchs, and M. Paulin (2012), Runoff conditions in the upper
+# Danube basin under an ensemble of climate change scenarios, 
+# Journal of Hydrology, Volumes 424-425, 6 March 2012, Pages 264-277, 
+# DOI:10.1016/j.jhydrol.2012.01.011.
+
+# Ref3:
+# Hoshin V. Gupta, Harald Kling, Koray K. Yilmaz, Guillermo F. Martinez, 
 # Decomposition of the mean squared error and NSE performance criteria: 
 # Implications for improving hydrological modelling, 
 # Journal of Hydrology, Volume 377, Issues 1-2, 20 October 2009, Pages 80-91, 
 # DOI: 10.1016/j.jhydrol.2009.08.003. ISSN 0022-1694, 
 
-# Ref2:
-# Kling, H.; Fuchs, M.; Paulin, M. (2012). Runoff conditions in the upper 
-# Danube basin under an ensemble of climate change scenarios. 
-# Journal of Hydrology, 424, 264-277. DOI:10.1016/j.jhydrol.2012.01.011.
-
-# Ref3: Tang, G., Clark, M. P., & Papalexiou, S. M. (2021).  
+# Ref4: Tang, G.; Clark, M. P.; Papalexiou, S. M. (2021).  
 # SC-earth: a station-based serially complete earth dataset from 1950 to 2019. 
-# Journal of Climate, 34(16), 6493-6511. DOI: 10.1175/JCLI-D-21-0067.1.
+# Journal of Climate, 34(16), 6493-6511.
+# DOI: 10.1175/JCLI-D-21-0067.1.
 
 
 # 'obs' : numeric 'data.frame', 'matrix' or 'vector' with observed values
@@ -56,13 +45,13 @@
 
 # 'Result': Kling-Gupta Efficiency between 'sim' and 'obs'
 
-KGE <- function(sim, obs, ...) UseMethod("KGE")
+KGEkm <- function(sim, obs, ...) UseMethod("KGEkm")
 
-KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                        method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
-                        fun=NULL, ...,
-                        epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
-                        epsilon.value=NA) { 
+KGEkm.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
+                          method=c("2012", "2009", "2021"), out.type=c("single", "full"), 
+                          fun=NULL, ...,
+                          epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+                          epsilon.value=NA) { 
 
   # If the user provided a value for 's'
   if (!identical(s, c(1,1,1)) )  {
@@ -96,9 +85,13 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
     mean.sim <- mean(sim, na.rm=na.rm)
     mean.obs <- mean(obs, na.rm=na.rm)
 
-    # Standard deviations
-    sigma.sim <- sd(sim, na.rm=na.rm)
-    sigma.obs <- sd(obs, na.rm=na.rm)
+    # Dispersion measures (~ standard deviation)
+    n         <- length(vi)
+    i         <- seq(from=1, to=n, by=1) 
+    K2sim     <- sum( 2*(i-1)*sim / (n*(n-1)) )
+    K2obs     <- sum( 2*(i-1)*obs / (n*(n-1)) )
+    sigma.sim <- sqrt(2*K2sim)
+    sigma.obs <- sqrt(2*K2obs)
          
     # Pearson product-moment correlation coefficient
     r     <- rPearson(sim, obs)
@@ -110,7 +103,7 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
     Beta <- mean.sim / mean.obs
 
     # Beta.2021 is the bias term proposed by Tang et al. (2021) to avoid the 
-    # anomalously negative KE or KGE' values when the mean value is close to zero 
+    # anomalously negative KE or KGEkm' values when the mean value is close to zero 
     Beta.2021 <- (mean.sim - mean.obs) / sigma.obs
        
     # CV.sim is the coefficient of variation of the simulated values [dimensionless]
@@ -139,15 +132,15 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
           vr.stg <- "Alpha"
         } # ELSE end
 
-    # KGE Computation
+    # KGEkm Computation
     if ( (mean.obs != 0) | (sigma.obs != 0) ) {
         if ( (method=="2009") | (method=="2012") ) {
-          KGE <- 1 - sqrt( (s[1]*(r-1))^2 + (s[2]*(vr-1))^2 + (s[3]*(Beta-1))^2 )
-        } else KGE <- 1 - sqrt( (s[1]*(r-1))^2 + (s[2]*(vr-1))^2 + (s[3]*(Beta.2021))^2 )
+          KGEkm <- 1 - sqrt( (s[1]*(r-1))^2 + (s[2]*(vr-1))^2 + (s[3]*(Beta-1))^2 )
+        } else KGEkm <- 1 - sqrt( (s[1]*(r-1))^2 + (s[2]*(vr-1))^2 + (s[3]*(Beta.2021))^2 )
     } else {
         if ( mean.obs != 0)  warning("Warning: 'mean(obs)==0'. Beta = Inf")
         if ( sigma.obs != 0) warning("Warning: 'sd(obs)==0'. ", vr.stg, " = Inf")
-        KGE <- NA
+        KGEkm <- NA
       } # ELSE end  
             
   } else {
@@ -165,37 +158,33 @@ KGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
             br.stg <- "Beta.2021"
             vr.stg <- "Alpha" 
           } # ELSE end
-      KGE <- NA
+      KGEkm <- NA
       warning("There are no pairs of 'sim' and 'obs' without missing values !")
     } # ELSE end
 
   if (out.type=="single") {
-        out <- KGE
+        out <- KGEkm
   } else {
-      out <- list(KGE.value=KGE, KGE.elements=c(r, br, vr))
+      out <- list(KGEkm.value=KGEkm, KGEkm.elements=c(r, br, vr))
       names(out[[2]]) <- c("r", br.stg, vr.stg)
     } # ELSE end    
  
   return(out)
      
-} # 'KGE.default' end
+} # 'KGEkm.default' end
 
 
 ################################################################################
 # Author : Mauricio Zambrano-Bigiarini                                         #
 ################################################################################
-# Started: 18-Jan-2011                                                         #
-# Updates: 25-Aug-2011                                                         #
-#          10-Oct-2012                                                         #
-#          18-Oct-2012 ; 19-Oct-2012                                           #
-#          12-Jul-2022 ; 13-Jul-2022                                           #
-#          11-Jul-2023                                                         #
+# Started: 06-May-2024                                                         #
+# Updates: 07-May-2024                                                         #
 ################################################################################
-KGE.matrix <- function (sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                        method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
-                        fun=NULL, ...,
-                        epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
-                        epsilon.value=NA) { 
+KGEkm.matrix <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
+                         method=c("2012", "2009", "2021"), out.type=c("single", "full"), 
+                         fun=NULL, ...,
+                         epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+                         epsilon.value=NA) { 
 
   # Checking that 'sim' and 'obs' have the same dimensions
   if ( all.equal(dim(sim), dim(obs)) != TRUE )
@@ -214,52 +203,48 @@ KGE.matrix <- function (sim, obs, s=c(1,1,1), na.rm=TRUE,
 
   ifelse(method=="2012", vr.stg <- "Gamma", vr.stg <- "Alpha")
 
-  KGE                <- rep(NA, ncol(obs))       
+  KGEkm                <- rep(NA, ncol(obs))       
   elements           <- matrix(NA, nrow=3, ncol=ncol(obs))
   rownames(elements) <- c("r", "Beta", vr.stg)
   colnames(elements) <- colnames(obs)
           
   if (out.type=="single") {
     out <- sapply(1:ncol(obs), function(i,x,y) { 
-                   KGE[i] <- KGE.default( x[,i], y[,i], s=s, na.rm=na.rm, 
+                   KGEkm[i] <- KGEkm.default( x[,i], y[,i], s=s, na.rm=na.rm, 
                                          method=method, out.type=out.type, 
                                          fun=fun, ..., epsilon.type=epsilon.type, 
                                          epsilon.value=epsilon.value )
                  }, x=sim, y=obs )  
     names(out) <- colnames(obs) 
   } else { out <- lapply(1:ncol(obs), function(i,x,y) { 
-                         KGE.default( x[,i], y[,i], s=s, na.rm=na.rm, method=method, 
+                         KGEkm.default( x[,i], y[,i], s=s, na.rm=na.rm, method=method, 
                                       out.type=out.type, fun=fun, ..., 
                                       epsilon.type=epsilon.type, 
                                       epsilon.value=epsilon.value )
                        }, x=sim, y=obs ) 
             for (i in 1:length(out) ) {
-               KGE[i] <- out[[i]][[1]]
+               KGEkm[i] <- out[[i]][[1]]
                elements[,i] <- as.numeric(out[[i]][[2]])
             } # FOR end 
-            out <- list(KGE.value=KGE, KGE.elements=elements)
+            out <- list(KGEkm.value=KGEkm, KGEkm.elements=elements)
           } # ELSE end                     
   
   return(out)
      
-} # 'KGE.matrix' end
+} # 'KGEkm.matrix' end
 
 
 ################################################################################
 # Author : Mauricio Zambrano-Bigiarini                                         #
 ################################################################################
-# Started: 18-Jan-2011                                                         #
-# Updates: 25-Aug-2011                                                         #
-#          10-Oct-2012                                                         #
-#          18-Oct-2012 ; 19-Oct-2012                                           #
-#          12-Jul-2022 ; 13-Jul-2022                                           #
-#          11-Jul-2023                                                         #
+# Started: 06-May-2024                                                         #
+# Updates: 07-May-2024                                                         #
 ################################################################################
-KGE.data.frame <- function (sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                            method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
-                            fun=NULL, ...,
-                            epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
-                            epsilon.value=NA) { 
+KGEkm.data.frame <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
+                             method=c("2012", "2009", "2021"), out.type=c("single", "full"), 
+                             fun=NULL, ...,
+                             epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+                             epsilon.value=NA) { 
  
   sim <- as.matrix(sim)
   obs <- as.matrix(obs)
@@ -267,33 +252,31 @@ KGE.data.frame <- function (sim, obs, s=c(1,1,1), na.rm=TRUE,
   method   <- match.arg(method)
   out.type <- match.arg(out.type) 
    
-  KGE.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, 
+  KGEkm.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, 
              fun=fun, ..., epsilon.type=epsilon.type, epsilon.value=epsilon.value)
      
-} # 'KGE.data.frame' end
+} # 'KGEkm.data.frame' end
 
 
 ################################################################################
 # Author: Mauricio Zambrano-Bigiarini                                          #
 ################################################################################
-# Started: 22-Mar-2013                                                         #
-# Updates: 16-Aug-2016                                                         #
-#          12-Jul-2022 ; 13-Jul-2022                                           #
-#          11-Jul-2023                                                         #
+# Started: 06-May-2024                                                         #
+# Updates: 07-May-2024                                                         #
 ################################################################################
-KGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                    method=c("2009", "2012", "2021"), out.type=c("single", "full"), 
-                    fun=NULL, ...,
-                    epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
-                    epsilon.value=NA) { 
+KGEkm.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
+                      method=c("2012", "2009", "2021"), out.type=c("single", "full"), 
+                      fun=NULL, ...,
+                      epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
+                      epsilon.value=NA) { 
     
     sim <- zoo::coredata(sim)
     if (is.zoo(obs)) obs <- zoo::coredata(obs)
     
     if (is.matrix(sim) | is.data.frame(sim)) {
-       KGE.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, 
+       KGEkm.matrix(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, 
                   fun=fun, ..., epsilon.type=epsilon.type, epsilon.value=epsilon.value)
     } else NextMethod(sim, obs, s=s, na.rm=na.rm, method=method, out.type=out.type, 
                       fun=fun, ..., epsilon.type=epsilon.type, epsilon.value=epsilon.value)
      
-  } # 'KGE.zoo' end
+  } # 'KGEkm.zoo' end

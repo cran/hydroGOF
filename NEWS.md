@@ -1,5 +1,25 @@
 NEWS/ChangeLog for hydroGOF
 
+# Changes in version 0.6-0  08-May-2024
+
+## New functions
+        o 'APFB' : to compute the mean annual peak flow bias focused on high flows, proposed by Mizukami et al. (2017).
+        o 'HFB'  : to compute the median annual high-flows bias focused on high flows, proposed by Zambrano-Bigiarini (2024).
+        o 'wsNSE': to compute the weighted seasonal Nash-Sutcliffe Efficiency focused on high or low flows (depending an an argument value), proposed by Zambrano-Bigiarini and Bellin (2012).
+        o 'KGEkm': to compute the knowable moments KGE, proposed by Pizarro and Jorquera (2024).
+
+## Bug fixes
+        o 'ggof' : the GoF values are now correctly shown in the legend ('VE' position was changed before KGEs). Thanks to  @seyounger (#23)
+        o 'plot2': the GoF values are now correctly shown in the legend.
+        o 'sKGE' : -) output values are correctly shown when 'sim' and 'obs' are matrix/data.frame and out.PerYear=TRUE.
+                   -) the argument 'start-month' now is working. It fix the error "Error in .shiftyears(dates.obs, start.month) : object 'syears' not found".
+
+## Other minor changes
+        o 'ggof'     : default values for 'lQ.thr' and 'hQ.thr' arguments were changed from 0.7 and 0.2, respectively  to 'lQ.thr=0.6' and 'hQ.thr==0.1'
+        o 'pbiasfdc' : default values for 'lQ.thr' and 'hQ.thr' arguments were changed from 0.7 and 0.2, respectively  to 'lQ.thr=0.6' and 'hQ.thr==0.1'
+        o References in most functions have been revised and improved.
+
+
 --------------------------
 # Changes in version 0.5-4  21-Jan-2024
 
@@ -55,6 +75,10 @@ NEWS/ChangeLog for hydroGOF
         o 'br2'     : R2 is now correctly computed as 1 - SSres/SStot. Before it was computed as rPearson^2, which was only correct for linear models. Thanks to eugenioLR (https://github.com/hzambran/hydroGOF/issues/16#issue-1736556320)
 
 
+## Package files
+        o Github Actions are used now to test the source code against stable and development R versions on Windows, Ubuntu and MacOS.
+
+        
 # Changes in version 0.4-0  11-Mar-2020
         o Package tested against R Under development (unstable) (2020-03-10 r77920) -- "Unsuffered Consequences", following an imperative request made by CRAN.
         o Citation file changed, following CRAN comments.

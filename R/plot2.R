@@ -20,6 +20,7 @@
 #          15-Apr-2013 ; 15-May-2013                                           #
 #          06-Aug-2017                                                         #
 #          28-Dec-2022                                                         #
+#          22-Mar-2024 ; 23-Mar-204 ; 08-May-2024                              #
 ################################################################################
                 
 plot2 <- function (x, y, 
@@ -39,9 +40,9 @@ plot2 <- function (x, y,
                    
                    gof.leg= FALSE, 
                    gof.digits=2, 
-                   gofs=c("ME", "MAE", "RMSE", "NRMSE", "PBIAS", "RSR", "rSD", 
-                          "NSE", "mNSE", "rNSE", "d", "md", "rd", "r", "R2", 
-                          "bR2", "KGE", "VE"),
+                   gofs=c("ME" , "MAE" , "RMSE", "NRMSE", "PBIAS", "RSR", "rSD", 
+                         "NSE", "mNSE", "rNSE",     "d",    "md",  "rd",   "r", 
+                         "R2",   "bR2", "KGE" ,    "VE"),
                    
                    legend,
                    leg.cex=1,                       
@@ -60,18 +61,38 @@ plot2 <- function (x, y,
                    add=FALSE,                   
                    
                     ...) {
-                   
+                 
+  # Saving the current graphical parameter settings,
+  # and restoring them on exit
+  #old.par <- par(no.readonly = TRUE)
+  #on.exit(par(old.par))
+  
   # Checking that the user provided 'x'
   if ( missing(x) ) stop("Missing argument: 'x'")
          
   # Checking that the user provided 'y'
   if ( missing(y) ) stop("Missing argument: 'y'")
 
-  # Checking 'gofs'
-  gofs.all=c("ME", "MAE", "MSE", "RMSE", "NRMSE", "PBIAS", "RSR", "rSD", "NSE", 
-             "mNSE", "rNSE", "d", "md", "rd", "cp", "r", "R2", "bR2", "KGE", "VE")  
-  if (length(noNms <- gofs[!gofs %in% gofs.all])) 
-    warning("[Unknown names in 'gofs': ", paste(noNms, collapse = ", "), " (not used) !]")		   
+  # Checking 'gofs'.  'rSpearman' and 'pbiasFDC' are not computed
+  gofs.all=c(   "ME",    "MAE",    "MSE",  "RMSE", "ubRMSE", 
+             "NRMSE",  "PBIAS",   "RSR",    "rSD",    "NSE",  
+             "mNSE" ,   "rNSE",  "wNSE",  "wsNSE",      "d",     
+                "dr",     "md",    "rd",     "cp",      "r",     
+                "R2",    "bR2",    "VE",    "KGE",  "KGElf",  
+             "KGEnp",  "KGEkm",  "sKGE",   "APFB",    "HFB")  
+
+  # Removing 'sKGE', 'APFB' and 'HFB' when 'x' and 'y' are not zoo objects
+  if ( !( zoo::is.zoo(x) & zoo::is.zoo(y) ) )
+    gofs.all <- gofs.all[ -c( (length(gofs.all)-2):(length(gofs.all)) ) ]
+
+  # Checking 'gofs' 
+  noNms.index <- which( !(gofs %in% gofs.all) )
+  if (length(noNms.index) > 0) {
+    noNms <- gofs[noNms.index]
+    warning("[Unknown names in 'gofs': ", paste(noNms, collapse = ", "), " (not used) !]")
+  } # IF end	   
+  gofs.index <- which( (gofs %in% gofs.all) )
+  gofs       <- gofs[gofs.index]
 
   # 'xname' and 'yname' values
   xname <- deparse(substitute(x))
@@ -144,9 +165,8 @@ plot2 <- function (x, y,
   } # ELSE end    
   
   # If the legend will not be plotted, the marginns are set to 'almost' the default values
-  if (!gof.leg) {  
-        par(mar=c(5, 4, 4, 2) + 0.1) # default values are par(mar=c(5, 4, 4, 4) + 0.1)
-  } # ELSE end      
+  if (!gof.leg)
+    par(mar=c(5, 4, 4, 2) + 0.1) # default values are par(mar=c(5, 4, 4, 4) + 0.1)
   
   # If the plot type is "time series"
   if (pt.style=="ts") {
@@ -286,8 +306,9 @@ plot2 <- function (x, y,
 
    gof.index <- pmatch(gofs, gofs.all)
    gof.index <- gof.index[!is.na(gof.index)]  
-    
-   gof.xy <- gof(sim=as.numeric(x), obs=as.numeric(y), do.spearman=FALSE, do.pbfdc=FALSE, digits=gof.digits, ...)
+   
+   #gof.xy <- gof(sim=as.numeric(x), obs=as.numeric(y), do.spearman=FALSE, do.pbfdc=FALSE, digits=gof.digits, ...)
+   gof.xy <- gof(sim=x, obs=y, do.spearman=FALSE, do.pbfdc=FALSE, digits=gof.digits, ...)
 
    gofs.stg  <- gofs.all[gof.index] 
    gofs.num  <- gof.xy[gof.index, 1] 

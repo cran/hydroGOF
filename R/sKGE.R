@@ -6,13 +6,14 @@
 # Distributed under GPL 2 or later
 
 ################################################################################
-# 'sKGE': Kling-Gupta Efficiency with focus on low flows                       #
+# 'sKGE': split Kling-Gupta Efficiency                                         #
 ################################################################################
 # Author : Mauricio Zambrano-Bigiarini                                         #
 ################################################################################
 # Started: 12-Jul-2022                                                         #
 # Updates: 13-Jul-2022 ; 14-Jul-2022                                           #
 #          16-Jan-2023                                                         #
+#          06-May-2024 ; 08-May-2024                                           # 
 ################################################################################
 # The optimal value of sKGE is 1
 
@@ -26,7 +27,7 @@ sKGE <- function(sim, obs, ...) UseMethod("sKGE")
 
 # epsilon: By default it is set at one hundredth of the mean flow. See Pushpalatha et al. (2012)
 sKGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                         method=c("2009", "2012"),
+                         method=c("2009", "2012", "2021"),
                          start.month=1, out.PerYear=FALSE,
                          fun=NULL,
                          ...,
@@ -35,7 +36,7 @@ sKGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
                          ) { 
 
   lKGE <- function(i, lsim, lobs, s=c(1,1,1), na.rm=TRUE, 
-                   method=c("2009", "2012"), out.type="single",
+                   method=c("2009", "2012", "2021"), out.type="single",
                    fun1=NULL,
                    ...,
                    epsilon.type=c("none", "Pushpalatha2012", "otherFactor", "otherValue"), 
@@ -54,7 +55,7 @@ sKGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
                           lstart.month # numeric in [2,..,12], representing the months. 2:Feb, 12:Dec
                           ) {
      syears.bak        <- as.numeric(format( ltime, "%Y" ))
-     syears            <- syears
+     syears            <- syears.bak
      smonths           <- as.numeric(format( ltime, "%m"))
      months2moveback   <- 1:(lstart.month-1)
      N                 <- length(months2moveback)
@@ -65,7 +66,7 @@ sKGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 	     syears[m.index] <- m.year
      } # FOR end
      return(syears)
-  } # '.shift' END
+  } # '.shiftyears' END
    
     
   # Checking 'method' and 'epsilon.type'
@@ -136,9 +137,10 @@ sKGE.default <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 # Started: 12-Jul-2022                                                         #
 # Updates: 14-Jul-2022                                                         #
 #          16-Jan-2023                                                         #
+#          06-May-2024 ; 08-May-2024                                           # 
 ################################################################################
 sKGE.matrix <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                         method=c("2009", "2012"),
+                         method=c("2009", "2012", "2021"),
                          start.month=1, out.PerYear=FALSE, 
                          fun=NULL,
                          ...,
@@ -162,23 +164,51 @@ sKGE.matrix <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 
   ifelse(method=="2012", vr.stg <- "Gamma", vr.stg <- "Alpha")
 
+ # Annual index for 'sim' and 'obs'
+  dates.sim  <- time(sim)
+  dates.obs  <- time(obs)
+  years.sim  <- format( dates.sim, "%Y")
+  years.obs  <- format( dates.obs, "%Y")
+  if (!all.equal(years.sim, years.obs)) {
+    stop("Invalid argument: 'sim' and 'obs' must have the same dates !")
+  } 
+  nyears <- length(unique(years.obs))
+
   sKGE               <- rep(NA, ncol(obs))       
-  elements           <- matrix(NA, nrow=3, ncol=ncol(obs))
-  rownames(elements) <- c("r", "Beta", vr.stg)
+  elements           <- matrix(NA, nrow=nyears, ncol=ncol(obs))
+  rownames(elements) <- unique(years.obs)
   colnames(elements) <- colnames(obs)
           
-  out <- sapply(1:ncol(obs), function(i,x,y) { 
-                   sKGE[i] <- sKGE.default( x[,i], y[,i], s=s, na.rm=na.rm, 
-                                              method=method, 
-                                              start.month=start.month, 
-                                              out.PerYear=out.PerYear, 
-                                              fun=fun, ..., 
-                                              epsilon.type=epsilon.type, 
-                                              epsilon.value=epsilon.value )
+  out.single <- sapply(1:ncol(obs), function(i,x,y) { 
+                       sKGE[i] <- sKGE.default( x[,i], y[,i], s=s, na.rm=na.rm, 
+                                                method=method, 
+                                                start.month=start.month, 
+                                                out.PerYear=out.PerYear, 
+                                                fun=fun, ..., 
+                                                epsilon.type=epsilon.type, 
+                                                epsilon.value=epsilon.value )[[1]]
                  }, x=sim, y=obs )  
-  names(out) <- colnames(obs)                     
+   names(out.single) <- names(obs)
+
+   if (out.PerYear) {        
+    out.yr <- sapply(1:ncol(obs), function(i,x,y) { 
+                    elements[,i] <-  sKGE.default( x[,i], y[,i], s=s, na.rm=na.rm, 
+                                                method=method, 
+                                                start.month=start.month, 
+                                                out.PerYear=out.PerYear, 
+                                                fun=fun, ..., 
+                                                epsilon.type=epsilon.type, 
+                                                epsilon.value=epsilon.value )[[2]]
+                   }, x=sim, y=obs ) 
+ 
+    colnames(out.yr) <- names(obs)                     
+  } # IF end
+
+  if (out.PerYear) {
+    out <- list(sKGE.value=out.single, sKGE.PerYear=out.yr)
+  } else out <- out.single
   
-  return(out)
+  return(out) 
      
 } # 'sKGE.matrix' end
 
@@ -189,9 +219,10 @@ sKGE.matrix <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 # Started: 12-Jul-2022                                                         #
 # Updates: 14-Jul-2022                                                         #
 #          16-Jan-2023                                                         #
+#          08-May-2024                                                         # 
 ################################################################################
 sKGE.data.frame <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                            method=c("2009", "2012"),
+                            method=c("2009", "2012", "2021"),
                             start.month=1, out.PerYear=FALSE,  
                             fun=NULL,
                             ...,
@@ -217,9 +248,10 @@ sKGE.data.frame <- function(sim, obs, s=c(1,1,1), na.rm=TRUE,
 # Started: 12-Jul-2022                                                         #
 # Updates: 14-Jul-2022                                                         #
 #          16-Jan-2023                                                         #
+#          08-May-2024                                                         # 
 ################################################################################
 sKGE.zoo <- function(sim, obs, s=c(1,1,1), na.rm=TRUE, 
-                     method=c("2009", "2012"),
+                     method=c("2009", "2012", "2021"),
                      start.month=1, out.PerYear=FALSE,   
                      fun=NULL,
                      ...,
