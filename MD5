@@ -1,5 +1,5 @@
 021863f7813b2602952b06a50fb5a2ff *ChangeLog
-8f6c86043f7e232cada68a1e39c9c0fd *DESCRIPTION
+cae9afac692c280da8366b0d505db044 *DESCRIPTION
 25ffa59e7fc512757660d373072863d6 *NAMESPACE
 ad364134c5ed55f1eb8020d0823ce7c4 *NEWS.md
 6d5c22893d6100a54782a4fc321b82ed *R/APFB.R
@@ -44,12 +44,12 @@ b07325d0a9561339a80778b4affb4ab1 *R/ssq.R
 2499006446b5ba4e10393ee5f2c8db1c *R/valindex.R
 8566795773efdaf463035c3d3b3decb9 *R/wNSE.R
 fc49f466fa70f14147458ddf30db3d18 *R/wsNSE.R
-f9648489d95a7dcf69e533c41d647f09 *build/vignette.rds
-5e7e15320d4d180841642c9801cbd6f0 *data/EgaEnEstellaQts.RData
+6f55f5fbc5cdf1f6138021d8830eb985 *build/vignette.rds
+a133a31a799e9ae4204bdb1145403725 *data/EgaEnEstellaQts.RData
 854b32f02b525717137caa589772d3c7 *inst/CITATION
 9297ec33ac0c96f955a059249fa546fb *inst/doc/hydroGOF_Vignette.R
 d94acb46aa452a628dc45d4503b437c9 *inst/doc/hydroGOF_Vignette.Rmd
-4c9ff868d496a0c3ea5f46bc59f26386 *inst/doc/hydroGOF_Vignette.pdf
+99c1588bcd85054f5a922657f1d0b480 *inst/doc/hydroGOF_Vignette.pdf
 177a8e83aa773906b9d45ca9dfef930b *man/APFB.Rd
 c6a63ec0d5bded92daf97f1ca81fbd65 *man/EgaEnEstellaQts.Rd
 d703054a7d313101e53f22cf19afd758 *man/HFB.Rd
